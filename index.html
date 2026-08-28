@@ -1,0 +1,2032 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>鼠标目标选择实验</title>
+
+
+<style>
+
+/* =========================
+   页面整体
+========================= */
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+
+    margin: 0;
+
+    font-family:
+        "Microsoft YaHei",
+        Arial,
+        sans-serif;
+
+    background: #f5f7fb;
+
+    color: #1f2937;
+}
+
+
+/* =========================
+   顶部
+========================= */
+
+header {
+
+    height: 68px;
+
+    background: white;
+
+    border-bottom: 1px solid #e5e7eb;
+
+    padding: 0 28px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+}
+
+
+h1 {
+
+    margin: 0;
+
+    font-size: 21px;
+
+    font-weight: 600;
+}
+
+
+.tag {
+
+    font-size: 13px;
+
+    color: #64748b;
+
+    background: #f1f5f9;
+
+    padding: 7px 11px;
+
+    border-radius: 8px;
+}
+
+
+/* =========================
+   页面布局
+========================= */
+
+.layout {
+
+    display: grid;
+
+    grid-template-columns: 310px 1fr;
+
+    min-height:
+        calc(100vh - 68px);
+}
+
+
+aside {
+
+    background: white;
+
+    border-right:
+        1px solid #e5e7eb;
+
+    padding: 24px;
+}
+
+
+main {
+
+    padding: 22px 24px;
+}
+
+
+/* =========================
+   输入区域
+========================= */
+
+.field {
+
+    margin-bottom: 18px;
+}
+
+
+label {
+
+    display: block;
+
+    font-size: 13px;
+
+    color: #64748b;
+
+    margin-bottom: 7px;
+}
+
+
+input,
+select {
+
+    width: 100%;
+
+    padding: 10px 11px;
+
+    border:
+        1px solid #d1d5db;
+
+    border-radius: 8px;
+
+    font-size: 14px;
+
+    background: white;
+}
+
+
+/* =========================
+   按钮
+========================= */
+
+button {
+
+    border: 0;
+
+    border-radius: 8px;
+
+    padding: 10px 15px;
+
+    cursor: pointer;
+
+    font-size: 14px;
+}
+
+
+.primary {
+
+    background: #2563eb;
+
+    color: white;
+}
+
+
+.primary:hover {
+
+    background: #1d4ed8;
+}
+
+
+.secondary {
+
+    background: #e5e7eb;
+
+    color: #374151;
+}
+
+
+.secondary:hover {
+
+    background: #dbe0e6;
+}
+
+
+button:disabled {
+
+    opacity: 0.5;
+
+    cursor: not-allowed;
+}
+
+
+/* =========================
+   工况说明
+========================= */
+
+.info {
+
+    padding: 14px 15px;
+
+    background: #f8fafc;
+
+    border:
+        1px solid #e5e7eb;
+
+    border-radius: 10px;
+
+    line-height: 1.7;
+
+    font-size: 13px;
+}
+
+
+.info-title {
+
+    font-weight: 600;
+
+    font-size: 14px;
+
+    margin-bottom: 4px;
+}
+
+
+/* =========================
+   状态
+========================= */
+
+.stats {
+
+    margin-top: 23px;
+
+    padding-top: 17px;
+
+    border-top:
+        1px solid #eeeeee;
+}
+
+
+.stat {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    padding: 8px 0;
+
+    font-size: 14px;
+}
+
+
+/* =========================
+   提示文字
+========================= */
+
+.hint {
+
+    font-size: 12px;
+
+    color: #94a3b8;
+
+    line-height: 1.6;
+}
+
+
+/* =========================
+   顶部状态栏
+========================= */
+
+.topbar {
+
+    background: white;
+
+    border:
+        1px solid #e5e7eb;
+
+    border-radius: 12px;
+
+    padding: 14px 18px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    margin-bottom: 15px;
+}
+
+
+.status {
+
+    font-weight: 600;
+}
+
+
+.sub {
+
+    font-size: 12px;
+
+    color: #94a3b8;
+
+    margin-top: 3px;
+}
+
+
+.beat-info {
+
+    font-size: 13px;
+
+    color: #64748b;
+
+    background: #f8fafc;
+
+    border:
+        1px solid #e5e7eb;
+
+    border-radius: 7px;
+
+    padding: 6px 10px;
+}
+
+
+/* =========================
+   实验区域
+========================= */
+
+#stage {
+
+    position: relative;
+
+    background: white;
+
+    border:
+        1px solid #dbe2ea;
+
+    border-radius: 14px;
+
+    height:
+        calc(100vh - 160px);
+
+    min-height: 600px;
+
+    overflow: hidden;
+
+    box-shadow:
+        0 4px 18px
+        rgba(15,23,42,0.04);
+}
+
+
+/* =========================
+   五个目标
+========================= */
+
+.dot {
+
+    position: absolute;
+
+    width: 52px;
+
+    height: 52px;
+
+    border-radius: 50%;
+
+    background: #2563eb;
+
+    border:
+        4px solid #dbeafe;
+
+    transform:
+        translate(-50%, -50%);
+
+    cursor: pointer;
+
+    box-shadow:
+        0 2px 8px
+        rgba(37,99,235,0.25);
+
+    transition:
+        transform 0.08s ease,
+        background 0.08s ease,
+        border-color 0.08s ease;
+}
+
+
+.dot:hover {
+
+    transform:
+        translate(-50%, -50%)
+        scale(1.05);
+}
+
+
+/* =========================
+   点击反馈
+========================= */
+
+.dot.clicked {
+
+    background: #22c55e;
+
+    border-color: #dcfce7;
+
+    transform:
+        translate(-50%, -50%)
+        scale(0.82);
+}
+
+
+/* =========================
+   中央提示
+========================= */
+
+.center {
+
+    position: absolute;
+
+    inset: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    flex-direction: column;
+
+    text-align: center;
+
+    color: #94a3b8;
+}
+
+
+.center-text {
+
+    font-size: 18px;
+
+    color: #64748b;
+}
+
+
+/* =========================
+   倒计时
+========================= */
+
+.countdown {
+
+    font-size: 90px;
+
+    font-weight: 700;
+
+    color: #2563eb;
+}
+
+
+/* =========================
+   上传状态
+========================= */
+
+.upload-success {
+
+    color: #16a34a;
+
+    font-size: 14px;
+
+    margin-top: 10px;
+}
+
+
+.upload-error {
+
+    color: #dc2626;
+
+    font-size: 14px;
+
+    margin-top: 10px;
+}
+
+
+/* =========================
+   小屏幕
+========================= */
+
+@media (max-width: 850px) {
+
+    .layout {
+
+        grid-template-columns: 1fr;
+    }
+
+    aside {
+
+        border-right: none;
+
+        border-bottom:
+            1px solid #e5e7eb;
+    }
+
+    #stage {
+
+        min-height: 600px;
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<header>
+
+    <h1>
+        鼠标目标选择实验
+    </h1>
+
+
+    <div class="tag">
+
+        5目标 · 120 BPM · 4/4拍 · 6 min
+
+    </div>
+
+</header>
+
+
+
+<div class="layout">
+
+
+<!-- =========================
+     左侧
+========================= -->
+
+<aside>
+
+
+    <div class="field">
+
+        <label>
+            被试者姓名
+        </label>
+
+        <input
+            id="name"
+            type="text"
+            placeholder="请输入姓名"
+        >
+
+    </div>
+
+
+
+    <div class="field">
+
+        <label>
+            实验工况
+        </label>
+
+
+        <select id="condition">
+
+            <option value="1">
+                工况1：自然选择
+            </option>
+
+            <option value="2">
+                工况2：随机选择
+            </option>
+
+        </select>
+
+    </div>
+
+
+
+    <div class="info">
+
+
+        <div
+            class="info-title"
+            id="conditionTitle"
+        >
+
+            工况1：自然选择
+
+        </div>
+
+
+        <div id="conditionText">
+
+            请按照平时的操作习惯，自然选择目标点。
+
+        </div>
+
+
+        <div style="margin-top:4px">
+
+            请跟随节拍器，每拍选择一个目标点。
+
+        </div>
+
+
+    </div>
+
+
+
+    <div
+        style="
+        margin-top:18px;
+        display:flex;
+        gap:8px;
+        "
+    >
+
+
+        <button
+            class="primary"
+            id="startButton"
+            style="flex:1"
+        >
+
+            开始实验
+
+        </button>
+
+
+        <button
+            class="secondary"
+            id="stopButton"
+            style="flex:1"
+            disabled
+        >
+
+            结束
+
+        </button>
+
+
+    </div>
+
+
+
+    <div class="stats">
+
+
+        <div class="stat">
+
+            <span>
+                状态
+            </span>
+
+            <b id="state">
+                未开始
+            </b>
+
+        </div>
+
+
+
+        <div class="stat">
+
+            <span>
+                剩余时间
+            </span>
+
+            <b id="time">
+                06:00
+            </b>
+
+        </div>
+
+
+
+        <div class="stat">
+
+            <span>
+                有效点击
+            </span>
+
+            <b id="clickCount">
+                0
+            </b>
+
+        </div>
+
+
+
+        <div class="stat">
+
+            <span>
+                当前节拍
+            </span>
+
+            <b id="beat">
+                —
+            </b>
+
+        </div>
+
+
+    </div>
+
+
+    <p class="hint">
+
+        点击开始后先进行3秒倒计时。
+        倒计时结束后开始播放节拍器。
+        实验持续6分钟，到时自动结束。
+
+    </p>
+
+
+    <div id="uploadStatus"></div>
+
+
+</aside>
+
+
+
+<!-- =========================
+     实验区域
+========================= -->
+
+<main>
+
+
+    <div class="topbar">
+
+
+        <div>
+
+
+            <div
+                class="status"
+                id="topStatus"
+            >
+
+                等待开始
+
+            </div>
+
+
+            <div class="sub">
+
+                实验开始后，每拍选择一个目标点
+
+            </div>
+
+
+        </div>
+
+
+        <div class="beat-info">
+
+            120 BPM · 4/4拍
+
+        </div>
+
+
+    </div>
+
+
+
+    <div id="stage">
+
+
+        <div
+            class="center"
+            id="centerMessage"
+        >
+
+            <div class="center-text">
+
+                请输入被试者姓名并开始实验
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+</main>
+
+
+</div>
+
+
+
+<!-- ==================================================
+     Firebase
+================================================== -->
+
+<script type="module">
+
+
+/* ==================================================
+   1. 导入 Firebase
+================================================== */
+
+import {
+    initializeApp
+} from
+"https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+
+
+import {
+    getAuth,
+    signInAnonymously
+} from
+"https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+
+
+import {
+    getFirestore,
+    collection,
+    addDoc,
+    serverTimestamp
+} from
+"https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+
+
+
+/* ==================================================
+   2. 你的 Firebase 配置
+================================================== */
+
+const firebaseConfig = {
+
+    apiKey:
+        "AIzaSyCjuXIRHuHe31rr3ro8OfqEBJQSqo_Vwzw",
+
+    authDomain:
+        "mouse-randomness-experiment.firebaseapp.com",
+
+    projectId:
+        "mouse-randomness-experiment",
+
+    storageBucket:
+        "mouse-randomness-experiment.firebasestorage.app",
+
+    messagingSenderId:
+        "200186780535",
+
+    appId:
+        "1:200186780535:web:e2fe9cb91015130a3e1f72"
+
+};
+
+
+
+/* ==================================================
+   3. 初始化 Firebase
+================================================== */
+
+const app =
+    initializeApp(firebaseConfig);
+
+
+const auth =
+    getAuth(app);
+
+
+const db =
+    getFirestore(app);
+
+
+
+/* ==================================================
+   4. 匿名登录
+================================================== */
+
+let currentUser = null;
+
+
+try {
+
+    const result =
+        await signInAnonymously(auth);
+
+    currentUser =
+        result.user;
+
+    console.log(
+        "Firebase匿名登录成功：",
+        currentUser.uid
+    );
+
+}
+
+catch (error) {
+
+    console.error(
+        "Firebase匿名登录失败：",
+        error
+    );
+
+}
+
+
+
+/* ==================================================
+   页面变量
+================================================== */
+
+let running = false;
+
+let countdownRunning = false;
+
+let experimentTimer = null;
+
+let metronomeTimer = null;
+
+let audioContext = null;
+
+let beatIndex = 0;
+
+let sequence = 0;
+
+let lastClickTime = null;
+
+let experimentEndTime = 0;
+
+let experimentStartTime = null;
+
+let experimentData = [];
+
+let dots = [];
+
+
+
+/* ==================================================
+   五边形五个顶点
+================================================== */
+
+const points = [
+
+    {
+        id: 1,
+        x: 50,
+        y: 30
+    },
+
+    {
+        id: 2,
+        x: 65,
+        y: 42
+    },
+
+    {
+        id: 3,
+        x: 59,
+        y: 60
+    },
+
+    {
+        id: 4,
+        x: 41,
+        y: 60
+    },
+
+    {
+        id: 5,
+        x: 35,
+        y: 42
+    }
+
+];
+
+
+
+/* ==================================================
+   页面元素
+================================================== */
+
+const nameInput =
+    document.getElementById("name");
+
+
+const conditionSelect =
+    document.getElementById("condition");
+
+
+const conditionTitle =
+    document.getElementById("conditionTitle");
+
+
+const conditionText =
+    document.getElementById("conditionText");
+
+
+const startButton =
+    document.getElementById("startButton");
+
+
+const stopButton =
+    document.getElementById("stopButton");
+
+
+const stateText =
+    document.getElementById("state");
+
+
+const timeText =
+    document.getElementById("time");
+
+
+const clickCount =
+    document.getElementById("clickCount");
+
+
+const beatText =
+    document.getElementById("beat");
+
+
+const topStatus =
+    document.getElementById("topStatus");
+
+
+const stage =
+    document.getElementById("stage");
+
+
+const centerMessage =
+    document.getElementById("centerMessage");
+
+
+const uploadStatus =
+    document.getElementById("uploadStatus");
+
+
+
+/* ==================================================
+   工况说明
+================================================== */
+
+conditionSelect.addEventListener(
+    "change",
+    updateConditionText
+);
+
+
+function updateConditionText() {
+
+
+    if (
+        conditionSelect.value === "1"
+    ) {
+
+
+        conditionTitle.textContent =
+            "工况1：自然选择";
+
+
+        conditionText.textContent =
+            "请按照平时的操作习惯，自然选择目标点。";
+
+    }
+
+
+    else {
+
+
+        conditionTitle.textContent =
+            "工况2：随机选择";
+
+
+        conditionText.textContent =
+            "请尽可能随机选择目标点，避免重复或固定顺序。";
+
+    }
+
+}
+
+
+
+/* ==================================================
+   创建五个目标
+================================================== */
+
+function createTargets() {
+
+
+    removeTargets();
+
+
+    points.forEach(
+        function(point) {
+
+
+            const dot =
+                document.createElement(
+                    "div"
+                );
+
+
+            dot.className =
+                "dot";
+
+
+            dot.dataset.id =
+                point.id;
+
+
+            dot.style.left =
+                point.x + "%";
+
+
+            dot.style.top =
+                point.y + "%";
+
+
+            dot.addEventListener(
+                "click",
+                function() {
+
+                    targetClicked(
+                        point.id,
+                        dot
+                    );
+
+                }
+            );
+
+
+            stage.appendChild(
+                dot
+            );
+
+
+            dots.push(
+                dot
+            );
+
+        }
+    );
+
+}
+
+
+
+/* ==================================================
+   删除目标
+================================================== */
+
+function removeTargets() {
+
+
+    dots.forEach(
+        function(dot) {
+
+            dot.remove();
+
+        }
+    );
+
+
+    dots = [];
+
+}
+
+
+
+/* ==================================================
+   初始化声音
+================================================== */
+
+function initAudio() {
+
+
+    if (!audioContext) {
+
+
+        audioContext =
+            new (
+                window.AudioContext ||
+                window.webkitAudioContext
+            )();
+
+    }
+
+
+    if (
+        audioContext.state ===
+        "suspended"
+    ) {
+
+
+        audioContext.resume();
+
+    }
+
+}
+
+
+
+/* ==================================================
+   播放节拍
+================================================== */
+
+function playBeat() {
+
+
+    if (!running) {
+
+        return;
+
+    }
+
+
+    const oscillator =
+        audioContext.createOscillator();
+
+
+    const gain =
+        audioContext.createGain();
+
+
+    const strongBeat =
+        beatIndex % 4 === 0;
+
+
+    oscillator.type =
+        "sine";
+
+
+    oscillator.frequency.value =
+        strongBeat
+        ? 1000
+        : 720;
+
+
+    gain.gain.setValueAtTime(
+        0.0001,
+        audioContext.currentTime
+    );
+
+
+    gain.gain.exponentialRampToValueAtTime(
+        strongBeat ? 0.20 : 0.12,
+        audioContext.currentTime + 0.005
+    );
+
+
+    gain.gain.exponentialRampToValueAtTime(
+        0.0001,
+        audioContext.currentTime + 0.055
+    );
+
+
+    oscillator.connect(
+        gain
+    );
+
+
+    gain.connect(
+        audioContext.destination
+    );
+
+
+    oscillator.start();
+
+
+    oscillator.stop(
+        audioContext.currentTime + 0.06
+    );
+
+
+    beatText.textContent =
+        (beatIndex % 4 + 1)
+        +
+        " / 4";
+
+
+    beatIndex++;
+
+}
+
+
+
+/* ==================================================
+   开始节拍器
+================================================== */
+
+function startMetronome() {
+
+
+    initAudio();
+
+
+    beatIndex = 0;
+
+
+    playBeat();
+
+
+    /*
+       120 BPM
+       60000 / 120 = 500 ms
+    */
+
+    metronomeTimer =
+        setInterval(
+            playBeat,
+            500
+        );
+
+}
+
+
+
+/* ==================================================
+   停止节拍器
+================================================== */
+
+function stopMetronome() {
+
+
+    clearInterval(
+        metronomeTimer
+    );
+
+
+    metronomeTimer =
+        null;
+
+
+    beatText.textContent =
+        "—";
+
+}
+
+
+
+/* ==================================================
+   3秒倒计时
+================================================== */
+
+function startCountdown() {
+
+
+    countdownRunning =
+        true;
+
+
+    startButton.disabled =
+        true;
+
+
+    stopButton.disabled =
+        true;
+
+
+    nameInput.disabled =
+        true;
+
+
+    conditionSelect.disabled =
+        true;
+
+
+    stateText.textContent =
+        "准备中";
+
+
+    topStatus.textContent =
+        "准备开始";
+
+
+    centerMessage.innerHTML =
+
+        '<div class="countdown" id="countdownNumber">3</div>';
+
+
+    let number = 3;
+
+
+    const countdownTimer =
+        setInterval(
+            function() {
+
+
+                number--;
+
+
+                if (
+                    number > 0
+                ) {
+
+
+                    document
+                        .getElementById(
+                            "countdownNumber"
+                        )
+                        .textContent =
+                        number;
+
+                }
+
+
+                else {
+
+
+                    clearInterval(
+                        countdownTimer
+                    );
+
+
+                    countdownRunning =
+                        false;
+
+
+                    startFormalExperiment();
+
+                }
+
+
+            },
+            1000
+        );
+
+}
+
+
+
+/* ==================================================
+   正式开始
+================================================== */
+
+function startFormalExperiment() {
+
+
+    running =
+        true;
+
+
+    sequence =
+        0;
+
+
+    lastClickTime =
+        null;
+
+
+    experimentData =
+        [];
+
+
+    clickCount.textContent =
+        "0";
+
+
+    uploadStatus.innerHTML =
+        "";
+
+
+    experimentStartTime =
+        new Date();
+
+
+    experimentEndTime =
+        Date.now()
+        +
+        6 * 60 * 1000;
+
+
+    stateText.textContent =
+        "进行中";
+
+
+    topStatus.textContent =
+        "实验进行中";
+
+
+    centerMessage.style.display =
+        "none";
+
+
+    stopButton.disabled =
+        false;
+
+
+    createTargets();
+
+
+    startMetronome();
+
+
+    updateRemainingTime();
+
+
+    experimentTimer =
+        setInterval(
+            updateRemainingTime,
+            100
+        );
+
+}
+
+
+
+/* ==================================================
+   更新时间
+================================================== */
+
+function updateRemainingTime() {
+
+
+    if (!running) {
+
+        return;
+
+    }
+
+
+    const remaining =
+        Math.max(
+            0,
+            (
+                experimentEndTime
+                -
+                Date.now()
+            ) / 1000
+        );
+
+
+    const totalSeconds =
+        Math.ceil(
+            remaining
+        );
+
+
+    const minutes =
+        Math.floor(
+            totalSeconds / 60
+        );
+
+
+    const seconds =
+        totalSeconds % 60;
+
+
+    timeText.textContent =
+
+        String(minutes)
+            .padStart(2, "0")
+        +
+        ":"
+        +
+        String(seconds)
+            .padStart(2, "0");
+
+
+    if (
+        remaining <= 0
+    ) {
+
+
+        finishExperiment();
+
+    }
+
+}
+
+
+
+/* ==================================================
+   点击目标
+================================================== */
+
+function targetClicked(
+    targetID,
+    dot
+) {
+
+
+    if (!running) {
+
+        return;
+
+    }
+
+
+    const currentTime =
+        performance.now();
+
+
+    let interval =
+        0;
+
+
+    if (
+        lastClickTime !== null
+    ) {
+
+
+        interval =
+            (
+                currentTime
+                -
+                lastClickTime
+            )
+            /
+            1000;
+
+    }
+
+
+    lastClickTime =
+        currentTime;
+
+
+    sequence++;
+
+
+    /*
+       点击视觉反馈
+    */
+
+    dot.classList.add(
+        "clicked"
+    );
+
+
+    setTimeout(
+        function() {
+
+            dot.classList.remove(
+                "clicked"
+            );
+
+        },
+        100
+    );
+
+
+    /*
+       记录点击
+    */
+
+    experimentData.push({
+
+        sequence:
+            sequence,
+
+        target:
+            targetID,
+
+        timestamp:
+            new Date().toISOString(),
+
+        interval_s:
+            Number(
+                interval.toFixed(4)
+            )
+
+    });
+
+
+    clickCount.textContent =
+        sequence;
+
+}
+
+
+
+/* ==================================================
+   上传实验数据到 Firebase
+================================================== */
+
+async function uploadExperimentData() {
+
+
+    if (
+        !currentUser
+    ) {
+
+
+        throw new Error(
+            "Firebase身份验证失败"
+        );
+
+    }
+
+
+    const participantName =
+        nameInput.value.trim();
+
+
+    const condition =
+        conditionSelect.value;
+
+
+    /*
+       一次实验作为一个文档保存
+
+       好处：
+       不需要每点击一次就写一次数据库，
+       可以减少数据库写入次数。
+    */
+
+    const experimentRecord = {
+
+        participant:
+            participantName,
+
+        condition:
+            condition,
+
+        conditionName:
+            condition === "1"
+            ? "自然选择"
+            : "随机选择",
+
+        userId:
+            currentUser.uid,
+
+        experimentStart:
+            experimentStartTime
+            ?.toISOString(),
+
+        experimentDuration:
+            360,
+
+        bpm:
+            120,
+
+        meter:
+            "4/4",
+
+        targetCount:
+            5,
+
+        clickCount:
+            experimentData.length,
+
+        clicks:
+            experimentData,
+
+        createdAt:
+            serverTimestamp()
+
+    };
+
+
+    await addDoc(
+
+        collection(
+            db,
+            "experiments"
+        ),
+
+        experimentRecord
+
+    );
+
+}
+
+
+
+/* ==================================================
+   结束实验
+================================================== */
+
+async function finishExperiment() {
+
+
+    if (!running) {
+
+        return;
+
+    }
+
+
+    running =
+        false;
+
+
+    clearInterval(
+        experimentTimer
+    );
+
+
+    experimentTimer =
+        null;
+
+
+    stopMetronome();
+
+
+    removeTargets();
+
+
+    stopButton.disabled =
+        true;
+
+
+    startButton.disabled =
+        true;
+
+
+    nameInput.disabled =
+        false;
+
+
+    conditionSelect.disabled =
+        false;
+
+
+    stateText.textContent =
+        "上传数据中";
+
+
+    topStatus.textContent =
+        "实验结束，正在保存";
+
+
+    timeText.textContent =
+        "00:00";
+
+
+    centerMessage.innerHTML =
+
+        '<div class="center-text">实验已结束</div>' +
+
+        '<div class="hint">正在自动保存实验数据，请稍候……</div>';
+
+
+    centerMessage.style.display =
+        "flex";
+
+
+    /*
+       自动上传
+    */
+
+    try {
+
+
+        await uploadExperimentData();
+
+
+        stateText.textContent =
+            "已完成";
+
+
+        topStatus.textContent =
+            "实验完成";
+
+
+        uploadStatus.innerHTML =
+
+            '<div class="upload-success">' +
+
+            '✓ 数据已自动保存，无需导出。' +
+
+            '</div>';
+
+
+        centerMessage.innerHTML =
+
+            '<div class="center-text">实验完成</div>' +
+
+            '<div class="hint">数据已自动保存，谢谢参与。</div>';
+
+
+    }
+
+
+    catch (error) {
+
+
+        console.error(
+            "数据上传失败：",
+            error
+        );
+
+
+        stateText.textContent =
+            "上传失败";
+
+
+        topStatus.textContent =
+            "数据保存失败";
+
+
+        uploadStatus.innerHTML =
+
+            '<div class="upload-error">' +
+
+            '⚠ 数据上传失败，请不要关闭页面，并联系实验人员。' +
+
+            '</div>';
+
+
+        centerMessage.innerHTML =
+
+            '<div class="center-text">数据保存失败</div>' +
+
+            '<div class="hint">请联系实验人员，不要关闭页面。</div>';
+
+    }
+
+}
+
+
+
+/* ==================================================
+   开始按钮
+================================================== */
+
+startButton.addEventListener(
+    "click",
+    function() {
+
+
+        if (
+            running ||
+            countdownRunning
+        ) {
+
+            return;
+
+        }
+
+
+        if (
+            nameInput.value.trim()
+            === ""
+        ) {
+
+
+            alert(
+                "请先填写被试者姓名"
+            );
+
+
+            nameInput.focus();
+
+
+            return;
+
+        }
+
+
+        /*
+           初始化声音
+        */
+
+        initAudio();
+
+
+        timeText.textContent =
+            "06:00";
+
+
+        startCountdown();
+
+    }
+);
+
+
+
+/* ==================================================
+   手动结束
+================================================== */
+
+stopButton.addEventListener(
+    "click",
+    function() {
+
+
+        if (running) {
+
+
+            const confirmEnd =
+                confirm(
+                    "确定要提前结束实验吗？"
+                );
+
+
+            if (
+                confirmEnd
+            ) {
+
+                finishExperiment();
+
+            }
+
+        }
+
+    }
+);
+
+
+
+/* ==================================================
+   初始化
+================================================== */
+
+updateConditionText();
+
+
+</script>
+
+
+</body>
+
+</html>
