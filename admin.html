@@ -1214,86 +1214,145 @@ function getClickInterval(click) {
 
 function renderTable() {
 
+    const loading = document.getElementById("loading");
+    const table = document.getElementById("dataTable");
+    const empty = document.getElementById("empty");
+    const tbody = document.getElementById("dataBody");
 
-    const loading =
-        document.getElementById(
-            "loading"
-        );
+    loading.style.display = "none";
 
-
-    const table =
-        document.getElementById(
-            "dataTable"
-        );
-
-
-    const empty =
-        document.getElementById(
-            "empty"
-        );
-
-
-    const tbody =
-        document.getElementById(
-            "dataBody"
-        );
-
-
-    loading.style.display =
-        "none";
-
-
-    const keyword =
-        document.getElementById(
-            "searchInput"
-        )
+    const keyword = document
+        .getElementById("searchInput")
         .value
         .trim()
         .toLowerCase();
 
+    const filtered = allExperiments.filter(function(item) {
 
-    const filtered =
-        allExperiments.filter(
-            function(item) {
+        const name = String(
+            item.participant || ""
+        ).toLowerCase();
 
-                const name =
-                    String(
-                        item.participant
-                        || ""
-                    )
-                    .toLowerCase();
+        return !keyword || name.includes(keyword);
 
+    });
 
-                return
-                    !keyword
-                    ||
-                    name.includes(
-                        keyword
-                    );
+    tbody.innerHTML = "";
 
-            }
-        );
+    if (filtered.length === 0) {
 
-
-    tbody.innerHTML =
-        "";
-
-
-    if (
-        filtered.length
-        ===
-        0
-    ) {
-
-        table.style.display =
-            "none";
-
-        empty.style.display =
-            "block";
+        table.style.display = "none";
+        empty.style.display = "block";
 
         return;
-
     }
+
+    table.style.display = "table";
+    empty.style.display = "none";
+
+    filtered.forEach(function(item) {
+
+        const tr = document.createElement("tr");
+
+        let condition = item.conditionName;
+
+        if (!condition) {
+
+            if (String(item.condition) === "1") {
+                condition = "自然选择";
+            } 
+            else if (String(item.condition) === "2") {
+                condition = "随机选择";
+            } 
+            else {
+                condition = item.condition || "-";
+            }
+        }
+
+        let clickCount = item.clickCount;
+
+        if (
+            clickCount === undefined ||
+            clickCount === null
+        ) {
+
+            if (Array.isArray(item.clicks)) {
+                clickCount = item.clicks.length;
+            } 
+            else {
+                clickCount = "-";
+            }
+        }
+
+        tr.innerHTML = `
+            <td>
+                ${escapeHTML(
+                    item.participant || "-"
+                )}
+            </td>
+
+            <td>
+                ${escapeHTML(condition)}
+            </td>
+
+            <td>
+                ${clickCount}
+            </td>
+
+            <td>
+                ${item.experimentDuration || 360} s
+            </td>
+
+            <td>
+                ${item.bpm || 120}
+            </td>
+
+            <td>
+                ${formatTime(item.experimentStart)}
+            </td>
+
+            <td>
+
+                <button
+                    class="secondary action-btn view-btn"
+                >
+                    查看
+                </button>
+
+                <button
+                    class="success action-btn export-btn"
+                >
+                    导出
+                </button>
+
+            </td>
+        `;
+
+        /* 查看 */
+
+        tr.querySelector(".view-btn")
+            .addEventListener("click", function() {
+
+                showDetails(item);
+
+            });
+
+
+        /* 单独导出 */
+
+        tr.querySelector(".export-btn")
+            .addEventListener("click", function() {
+
+                exportSingle(item);
+
+            });
+
+
+        tbody.appendChild(tr);
+
+    });
+
+}
 
 
     table.style.display =
