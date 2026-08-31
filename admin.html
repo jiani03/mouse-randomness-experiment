@@ -26,333 +26,542 @@ body {
     color: #1f2937;
 }
 
+/* =========================
+   登录页面
+========================= */
+
 #loginPage {
+
     min-height: 100vh;
+
     display: flex;
+
     align-items: center;
+
     justify-content: center;
+
     background: #f5f7fb;
 }
 
 .login-box {
+
     width: 360px;
+
     background: white;
+
     padding: 35px;
+
     border-radius: 14px;
+
     box-shadow:
         0 8px 30px
         rgba(0,0,0,0.08);
+
     text-align: center;
 }
 
 .login-box h1 {
+
     margin-top: 0;
+
     margin-bottom: 8px;
+
     font-size: 22px;
 }
 
 .login-box p {
+
     color: #64748b;
+
     font-size: 13px;
+
     margin-bottom: 24px;
 }
 
 .login-box input {
+
     width: 100%;
+
     padding: 11px;
+
     border:
         1px solid #d1d5db;
+
     border-radius: 8px;
+
     font-size: 14px;
+
     margin-bottom: 12px;
 }
 
 .login-box button {
+
     width: 100%;
+
     padding: 11px;
+
     border: none;
+
     border-radius: 8px;
+
     background: #2563eb;
+
     color: white;
+
     cursor: pointer;
+
     font-size: 14px;
 }
 
 .login-error {
+
     color: #dc2626;
+
     font-size: 13px;
+
     margin-top: 10px;
 }
 
+
+/* =========================
+   后台主体
+========================= */
+
 #adminPage {
+
     display: none;
+
     min-height: 100vh;
 }
 
 header {
+
     height: 68px;
+
     background: white;
+
     border-bottom:
         1px solid #e5e7eb;
-    padding: 0 28px;
+
+    padding:
+        0 28px;
+
     display: flex;
+
     align-items: center;
+
     justify-content: space-between;
 }
 
 header h1 {
+
     margin: 0;
+
     font-size: 21px;
+
     font-weight: 600;
 }
 
 .header-right {
+
     display: flex;
+
     align-items: center;
+
     gap: 10px;
 }
 
 .logout {
+
     padding: 7px 12px;
+
     border:
         1px solid #d1d5db;
+
     background: white;
+
     border-radius: 7px;
+
     cursor: pointer;
+
     font-size: 13px;
 }
 
+
+/* =========================
+   内容区域
+========================= */
+
 .container {
+
     max-width: 1400px;
+
     margin: 0 auto;
+
     padding: 25px;
 }
 
+
+/* =========================
+   统计卡片
+========================= */
+
 .cards {
+
     display: grid;
+
     grid-template-columns:
         repeat(3, 1fr);
+
     gap: 16px;
+
     margin-bottom: 20px;
 }
 
 .card {
+
     background: white;
+
     border:
         1px solid #e5e7eb;
+
     border-radius: 12px;
+
     padding: 18px;
 }
 
 .card-title {
+
     font-size: 13px;
+
     color: #64748b;
+
     margin-bottom: 8px;
 }
 
 .card-value {
+
     font-size: 27px;
+
     font-weight: 600;
 }
 
+
+/* =========================
+   操作栏
+========================= */
+
 .toolbar {
+
     background: white;
+
     border:
         1px solid #e5e7eb;
+
     border-radius: 12px;
+
     padding: 15px;
+
     margin-bottom: 15px;
+
     display: flex;
+
     align-items: center;
+
     justify-content: space-between;
+
     gap: 10px;
+
     flex-wrap: wrap;
 }
 
 .toolbar-left {
+
     display: flex;
+
     gap: 8px;
+
     flex-wrap: wrap;
 }
 
 button {
+
     border: none;
+
     border-radius: 7px;
+
     padding: 9px 13px;
+
     font-size: 13px;
+
     cursor: pointer;
 }
 
 .primary {
+
     background: #2563eb;
+
     color: white;
 }
 
 .secondary {
+
     background: #e5e7eb;
+
     color: #374151;
 }
 
 .success {
+
     background: #16a34a;
+
     color: white;
 }
 
 .search {
+
     padding: 9px 11px;
+
     border:
         1px solid #d1d5db;
+
     border-radius: 7px;
+
     width: 220px;
+
     font-size: 13px;
 }
 
+
+/* =========================
+   表格
+========================= */
+
 .table-box {
+
     background: white;
+
     border:
         1px solid #e5e7eb;
+
     border-radius: 12px;
+
     overflow: auto;
 }
 
 table {
+
     width: 100%;
+
     border-collapse: collapse;
+
     min-width: 850px;
 }
 
 th {
+
     background: #f8fafc;
+
     font-size: 13px;
+
     color: #64748b;
+
     font-weight: 500;
+
     text-align: left;
+
     padding: 13px 15px;
+
     border-bottom:
         1px solid #e5e7eb;
 }
 
 td {
+
     padding: 13px 15px;
+
     border-bottom:
         1px solid #f0f0f0;
+
     font-size: 13px;
 }
 
 tr:last-child td {
+
     border-bottom: none;
 }
 
 .action-btn {
+
     padding: 6px 9px;
+
     font-size: 12px;
+
     margin-right: 5px;
 }
 
+
+/* =========================
+   状态
+========================= */
+
 .empty {
+
     text-align: center;
+
     padding: 50px;
+
     color: #94a3b8;
+
     font-size: 14px;
 }
 
 .loading {
+
     text-align: center;
+
     padding: 40px;
+
     color: #64748b;
 }
 
+
+/* =========================
+   详情弹窗
+========================= */
+
 .modal {
+
     display: none;
+
     position: fixed;
+
     inset: 0;
+
     background:
         rgba(0,0,0,0.45);
+
     z-index: 1000;
+
     padding: 30px;
+
     overflow: auto;
 }
 
 .modal-content {
+
     background: white;
+
     max-width: 1100px;
+
     margin: 0 auto;
+
     border-radius: 14px;
+
     padding: 25px;
+
 }
 
 .modal-header {
+
     display: flex;
+
     justify-content: space-between;
+
     align-items: center;
+
     margin-bottom: 20px;
 }
 
 .modal-header h2 {
+
     margin: 0;
+
     font-size: 20px;
 }
 
 .close {
+
     background: #e5e7eb;
+
     color: #374151;
+
     border-radius: 7px;
+
     padding: 7px 12px;
 }
 
 .detail-grid {
+
     display: grid;
+
     grid-template-columns:
         repeat(4, 1fr);
+
     gap: 12px;
+
     margin-bottom: 20px;
 }
 
 .detail-item {
+
     background: #f8fafc;
+
     padding: 13px;
+
     border-radius: 8px;
 }
 
 .detail-label {
+
     font-size: 12px;
+
     color: #64748b;
+
     margin-bottom: 5px;
 }
 
 .detail-value {
+
     font-size: 14px;
+
     font-weight: 500;
 }
 
 .sequence-box {
+
     background: #f8fafc;
+
     border:
         1px solid #e5e7eb;
+
     border-radius: 8px;
+
     padding: 15px;
-    max-height: 350px;
+
+    max-height: 250px;
+
     overflow: auto;
+
     font-size: 13px;
+
     line-height: 1.8;
-    word-break: break-all;
 }
 
-.sequence-number {
-    display: inline-block;
-    background: #e2e8f0;
-    padding: 2px 7px;
-    margin: 2px;
-    border-radius: 4px;
-}
+
+/* =========================
+   响应式
+========================= */
 
 @media (max-width: 800px) {
 
     .cards {
+
         grid-template-columns: 1fr;
     }
 
     .detail-grid {
+
         grid-template-columns:
             repeat(2, 1fr);
     }
@@ -367,15 +576,17 @@ tr:last-child td {
 <body>
 
 
-<!-- ==============================
-     登录
-============================== -->
+<!-- ==================================================
+     登录页面
+================================================== -->
 
 <div id="loginPage">
 
     <div class="login-box">
 
-        <h1>实验后台</h1>
+        <h1>
+            实验后台
+        </h1>
 
         <p>
             鼠标目标选择随机性实验
@@ -387,7 +598,9 @@ tr:last-child td {
             placeholder="请输入后台密码"
         >
 
-        <button id="loginButton">
+        <button
+            id="loginButton"
+        >
             登录
         </button>
 
@@ -402,11 +615,12 @@ tr:last-child td {
 
 
 
-<!-- ==============================
-     后台
-============================== -->
+<!-- ==================================================
+     后台页面
+================================================== -->
 
 <div id="adminPage">
+
 
 <header>
 
@@ -437,10 +651,13 @@ tr:last-child td {
 </header>
 
 
+
 <div class="container">
 
 
-    <!-- 统计 -->
+    <!-- =========================
+         统计
+    ========================= -->
 
     <div class="cards">
 
@@ -495,7 +712,9 @@ tr:last-child td {
 
 
 
-    <!-- 操作 -->
+    <!-- =========================
+         操作
+    ========================= -->
 
     <div class="toolbar">
 
@@ -510,6 +729,7 @@ tr:last-child td {
 
         </div>
 
+
         <input
             id="searchInput"
             class="search"
@@ -521,7 +741,9 @@ tr:last-child td {
 
 
 
-    <!-- 数据表 -->
+    <!-- =========================
+         表格
+    ========================= -->
 
     <div class="table-box">
 
@@ -542,26 +764,42 @@ tr:last-child td {
 
                 <tr>
 
-                    <th>被试者姓名</th>
+                    <th>
+                        被试者姓名
+                    </th>
 
-                    <th>工况</th>
+                    <th>
+                        工况
+                    </th>
 
-                    <th>点击次数</th>
+                    <th>
+                        点击次数
+                    </th>
 
-                    <th>实验时长</th>
+                    <th>
+                        实验时长
+                    </th>
 
-                    <th>BPM</th>
+                    <th>
+                        BPM
+                    </th>
 
-                    <th>开始时间</th>
+                    <th>
+                        开始时间
+                    </th>
 
-                    <th>操作</th>
+                    <th>
+                        操作
+                    </th>
 
                 </tr>
 
             </thead>
 
 
-            <tbody id="dataBody"></tbody>
+            <tbody
+                id="dataBody"
+            ></tbody>
 
         </table>
 
@@ -576,15 +814,17 @@ tr:last-child td {
 
     </div>
 
-</div>
 
 </div>
 
 
+</div>
 
-<!-- ==============================
-     查看详情
-============================== -->
+
+
+<!-- ==================================================
+     详情弹窗
+================================================== -->
 
 <div
     id="detailModal"
@@ -592,6 +832,7 @@ tr:last-child td {
 >
 
     <div class="modal-content">
+
 
         <div class="modal-header">
 
@@ -608,7 +849,11 @@ tr:last-child td {
 
         </div>
 
-        <div id="detailContent"></div>
+
+        <div
+            id="detailContent"
+        ></div>
+
 
     </div>
 
@@ -616,12 +861,12 @@ tr:last-child td {
 
 
 
+<!-- ==================================================
+     Firebase
+================================================== -->
+
 <script type="module">
 
-
-/* ==================================================
-   Firebase
-================================================== */
 
 import {
     initializeApp
@@ -644,7 +889,10 @@ import {
 "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
 
-/* Firebase配置 */
+
+/* ==================================================
+   Firebase配置
+================================================== */
 
 const firebaseConfig = {
 
@@ -685,13 +933,16 @@ const db =
 
 
 /* ==================================================
-   全局数据
+   页面变量
 ================================================== */
 
 let allExperiments = [];
 
 
-/* 后台密码 */
+
+/* ==================================================
+   后台密码
+================================================== */
 
 const ADMIN_PASSWORD =
     "123456";
@@ -707,20 +958,24 @@ const loginPage =
         "loginPage"
     );
 
+
 const adminPage =
     document.getElementById(
         "adminPage"
     );
+
 
 const passwordInput =
     document.getElementById(
         "passwordInput"
     );
 
+
 const loginButton =
     document.getElementById(
         "loginButton"
     );
+
 
 const loginError =
     document.getElementById(
@@ -728,39 +983,40 @@ const loginError =
     );
 
 
-async function login() {
+function login() {
 
 
     if (
         passwordInput.value
-        !==
+        ===
         ADMIN_PASSWORD
     ) {
 
-        loginError.textContent =
-            "密码错误，请重新输入。";
 
-        passwordInput.value =
-            "";
+        loginPage.style.display =
+            "none";
 
-        return;
+
+        adminPage.style.display =
+            "block";
+
+
+        startFirebase();
 
     }
 
 
-    loginError.textContent =
-        "";
+    else {
 
 
-    loginPage.style.display =
-        "none";
+        loginError.textContent =
+            "密码错误，请重新输入。";
 
 
-    adminPage.style.display =
-        "block";
+        passwordInput.value =
+            "";
 
-
-    startFirebase();
+    }
 
 }
 
@@ -794,46 +1050,54 @@ passwordInput.addEventListener(
 ================================================== */
 
 document
-.getElementById(
-    "logoutButton"
-)
-.addEventListener(
-    "click",
-    function() {
+    .getElementById(
+        "logoutButton"
+    )
+    .addEventListener(
+        "click",
+        function() {
 
-        adminPage.style.display =
-            "none";
+            adminPage.style.display =
+                "none";
 
-        loginPage.style.display =
-            "flex";
+            loginPage.style.display =
+                "flex";
 
-        passwordInput.value =
-            "";
+            passwordInput.value =
+                "";
 
-    }
-);
+        }
+    );
 
 
 
 /* ==================================================
-   Firebase登录
+   Firebase匿名登录
 ================================================== */
 
 async function startFirebase() {
 
+
     try {
+
 
         await signInAnonymously(
             auth
         );
 
+
         listenToData();
+
 
     }
 
-    catch(error) {
+    catch (error) {
 
-        console.error(error);
+
+        console.error(
+            error
+        );
+
 
         document.getElementById(
             "loading"
@@ -847,7 +1111,7 @@ async function startFirebase() {
 
 
 /* ==================================================
-   实时读取实验数据
+   实时监听数据库
 ================================================== */
 
 function listenToData() {
@@ -874,6 +1138,7 @@ function listenToData() {
             snapshot.forEach(
                 function(doc) {
 
+
                     allExperiments.push({
 
                         id:
@@ -888,7 +1153,7 @@ function listenToData() {
 
 
             /*
-              按实验开始时间排序
+               最新实验放在最上面
             */
 
             allExperiments.sort(
@@ -903,9 +1168,8 @@ function listenToData() {
                         || "";
 
                     return
-                        String(timeB)
-                        .localeCompare(
-                            String(timeA)
+                        timeB.localeCompare(
+                            timeA
                         );
 
                 }
@@ -914,21 +1178,24 @@ function listenToData() {
 
             updateStatistics();
 
+
             renderTable();
 
         },
 
         function(error) {
 
+
             console.error(
                 "读取数据失败：",
                 error
             );
 
+
             document.getElementById(
                 "loading"
             ).textContent =
-                "读取数据失败，请检查 Firebase 权限。";
+                "读取数据失败。";
 
         }
 
@@ -949,23 +1216,21 @@ function updateStatistics() {
         allExperiments.length;
 
 
-    const condition1 =
+    const c1 =
         allExperiments.filter(
             function(item) {
 
-                return item.condition
-                    === "1";
+                return item.condition === "1";
 
             }
         ).length;
 
 
-    const condition2 =
+    const c2 =
         allExperiments.filter(
             function(item) {
 
-                return item.condition
-                    === "2";
+                return item.condition === "2";
 
             }
         ).length;
@@ -980,20 +1245,20 @@ function updateStatistics() {
     document.getElementById(
         "condition1Count"
     ).textContent =
-        condition1;
+        c1;
 
 
     document.getElementById(
         "condition2Count"
     ).textContent =
-        condition2;
+        c2;
 
 }
 
 
 
 /* ==================================================
-   时间格式
+   格式化时间
 ================================================== */
 
 function formatTime(value) {
@@ -1024,19 +1289,12 @@ function formatTime(value) {
     return date.toLocaleString(
         "zh-CN",
         {
-
             year: "numeric",
-
             month: "2-digit",
-
             day: "2-digit",
-
             hour: "2-digit",
-
             minute: "2-digit",
-
             second: "2-digit"
-
         }
     );
 
@@ -1045,7 +1303,193 @@ function formatTime(value) {
 
 
 /* ==================================================
-   HTML安全处理
+   表格
+================================================== */
+
+function renderTable() {
+
+    const loading = document.getElementById("loading");
+    const table = document.getElementById("dataTable");
+    const empty = document.getElementById("empty");
+    const tbody = document.getElementById("dataBody");
+
+    loading.style.display = "none";
+
+    const keyword = document
+        .getElementById("searchInput")
+        .value
+        .trim()
+        .toLowerCase();
+
+    const filtered = allExperiments.filter(function(item) {
+
+        return (
+            !keyword ||
+            String(item.participant || "")
+                .toLowerCase()
+                .includes(keyword)
+        );
+
+    });
+
+    tbody.innerHTML = "";
+
+    if (filtered.length === 0) {
+
+        table.style.display = "none";
+        empty.style.display = "block";
+
+        return;
+    }
+
+    table.style.display = "table";
+    empty.style.display = "none";
+
+
+    filtered.forEach(function(item) {
+
+        const tr = document.createElement("tr");
+
+        let condition = item.conditionName;
+
+        if (!condition) {
+
+            if (String(item.condition) === "1") {
+
+                condition = "自然选择";
+
+            } else if (String(item.condition) === "2") {
+
+                condition = "随机选择";
+
+            } else {
+
+                condition = "-";
+
+            }
+
+        }
+
+
+        let clickCount = item.clickCount;
+
+        if (
+            clickCount === undefined ||
+            clickCount === null
+        ) {
+
+            if (Array.isArray(item.clicks)) {
+
+                clickCount = item.clicks.length;
+
+            } else {
+
+                clickCount = 0;
+
+            }
+
+        }
+
+
+        tr.innerHTML = `
+            <td>
+                ${escapeHTML(
+                    item.participant || "-"
+                )}
+            </td>
+
+            <td>
+                ${escapeHTML(condition)}
+            </td>
+
+            <td>
+                ${clickCount}
+            </td>
+
+            <td>
+                ${item.experimentDuration ?? 0} s
+            </td>
+
+            <td>
+                ${item.bpm ?? 120}
+            </td>
+
+            <td>
+                ${formatTime(
+                    item.experimentStart
+                )}
+            </td>
+
+            <td>
+
+                <button
+                    type="button"
+                    class="secondary action-btn view-btn"
+                >
+                    查看
+                </button>
+
+                <button
+                    type="button"
+                    class="success action-btn export-btn"
+                >
+                    导出
+                </button>
+
+            </td>
+        `;
+
+
+        /* ==========================
+           查看按钮
+        ========================== */
+
+        const viewButton =
+            tr.querySelector(".view-btn");
+
+        viewButton.addEventListener(
+            "click",
+            function(event) {
+
+                event.preventDefault();
+                event.stopPropagation();
+
+                showDetails(item);
+
+            }
+        );
+
+
+        /* ==========================
+           单独导出按钮
+        ========================== */
+
+        const exportButton =
+            tr.querySelector(".export-btn");
+
+        exportButton.addEventListener(
+            "click",
+            function(event) {
+
+                event.preventDefault();
+                event.stopPropagation();
+
+                exportSingle(item);
+
+            }
+        );
+
+
+        tbody.appendChild(tr);
+
+    });
+
+}
+
+
+
+/* ==================================================
+   防止HTML注入
 ================================================== */
 
 function escapeHTML(value) {
@@ -1083,456 +1527,6 @@ function escapeHTML(value) {
 
 
 /* ==================================================
-   获取点击数据
-================================================== */
-
-function getClicks(item) {
-
-
-    if (
-        Array.isArray(
-            item.clicks
-        )
-    ) {
-
-        return item.clicks;
-
-    }
-
-
-    return [];
-
-}
-
-
-
-/* ==================================================
-   获取目标点
-================================================== */
-
-function getTarget(click) {
-
-
-    if (
-        click.target !== undefined
-    ) {
-
-        return click.target;
-
-    }
-
-
-    if (
-        click.targetIndex !== undefined
-    ) {
-
-        return click.targetIndex;
-
-    }
-
-
-    if (
-        click.point !== undefined
-    ) {
-
-        return click.point;
-
-    }
-
-
-    return "";
-
-}
-
-
-
-/* ==================================================
-   获取点击时间
-================================================== */
-
-function getClickTime(click) {
-
-
-    if (
-        click.timestamp !== undefined
-    ) {
-
-        return click.timestamp;
-
-    }
-
-
-    if (
-        click.time !== undefined
-    ) {
-
-        return click.time;
-
-    }
-
-
-    return "";
-
-}
-
-
-
-/* ==================================================
-   获取点击间隔
-================================================== */
-
-function getClickInterval(click) {
-
-
-    if (
-        click.interval_s !== undefined
-    ) {
-
-        return click.interval_s;
-
-    }
-
-
-    if (
-        click.interval !== undefined
-    ) {
-
-        return click.interval;
-
-    }
-
-
-    return "";
-
-}
-
-
-
-/* ==================================================
-   显示表格
-================================================== */
-
-function renderTable() {
-
-    const loading = document.getElementById("loading");
-    const table = document.getElementById("dataTable");
-    const empty = document.getElementById("empty");
-    const tbody = document.getElementById("dataBody");
-
-    loading.style.display = "none";
-
-    const keyword = document
-        .getElementById("searchInput")
-        .value
-        .trim()
-        .toLowerCase();
-
-    const filtered = allExperiments.filter(function(item) {
-
-        const name = String(
-            item.participant || ""
-        ).toLowerCase();
-
-        return !keyword || name.includes(keyword);
-
-    });
-
-    tbody.innerHTML = "";
-
-    if (filtered.length === 0) {
-
-        table.style.display = "none";
-        empty.style.display = "block";
-
-        return;
-    }
-
-    table.style.display = "table";
-    empty.style.display = "none";
-
-    filtered.forEach(function(item) {
-
-        const tr = document.createElement("tr");
-
-        let condition = item.conditionName;
-
-        if (!condition) {
-
-            if (String(item.condition) === "1") {
-                condition = "自然选择";
-            } 
-            else if (String(item.condition) === "2") {
-                condition = "随机选择";
-            } 
-            else {
-                condition = item.condition || "-";
-            }
-        }
-
-        let clickCount = item.clickCount;
-
-        if (
-            clickCount === undefined ||
-            clickCount === null
-        ) {
-
-            if (Array.isArray(item.clicks)) {
-                clickCount = item.clicks.length;
-            } 
-            else {
-                clickCount = "-";
-            }
-        }
-
-        tr.innerHTML = `
-            <td>
-                ${escapeHTML(
-                    item.participant || "-"
-                )}
-            </td>
-
-            <td>
-                ${escapeHTML(condition)}
-            </td>
-
-            <td>
-                ${clickCount}
-            </td>
-
-            <td>
-                ${item.experimentDuration || 360} s
-            </td>
-
-            <td>
-                ${item.bpm || 120}
-            </td>
-
-            <td>
-                ${formatTime(item.experimentStart)}
-            </td>
-
-            <td>
-
-                <button
-                    class="secondary action-btn view-btn"
-                >
-                    查看
-                </button>
-
-                <button
-                    class="success action-btn export-btn"
-                >
-                    导出
-                </button>
-
-            </td>
-        `;
-
-        /* 查看 */
-
-        tr.querySelector(".view-btn")
-            .addEventListener("click", function() {
-
-                showDetails(item);
-
-            });
-
-
-        /* 单独导出 */
-
-        tr.querySelector(".export-btn")
-            .addEventListener("click", function() {
-
-                exportSingle(item);
-
-            });
-
-
-        tbody.appendChild(tr);
-
-    });
-
-}
-
-
-    table.style.display =
-        "table";
-
-    empty.style.display =
-        "none";
-
-
-    filtered.forEach(
-        function(item) {
-
-
-            const tr =
-                document.createElement(
-                    "tr"
-                );
-
-
-            const condition =
-                item.conditionName
-                ||
-                (
-                    item.condition
-                    === "1"
-                    ?
-                    "自然选择"
-                    :
-                    "随机选择"
-                );
-
-
-            tr.innerHTML = `
-
-                <td>
-                    ${escapeHTML(
-                        item.participant
-                        || "-"
-                    )}
-                </td>
-
-                <td>
-                    ${escapeHTML(
-                        condition
-                    )}
-                </td>
-
-                <td>
-                    ${item.clickCount
-                        ?? getClicks(item).length}
-                </td>
-
-                <td>
-                    ${item.experimentDuration
-                        ?? 360} s
-                </td>
-
-                <td>
-                    ${item.bpm
-                        ?? 120}
-                </td>
-
-                <td>
-                    ${formatTime(
-                        item.experimentStart
-                    )}
-                </td>
-
-                <td>
-
-                    <button
-                        class="secondary action-btn"
-                        data-action="view"
-                        data-id="${item.id}"
-                    >
-                        查看
-                    </button>
-
-                    <button
-                        class="success action-btn"
-                        data-action="export"
-                        data-id="${item.id}"
-                    >
-                        导出
-                    </button>
-
-                </td>
-
-            `;
-
-
-            tbody.appendChild(
-                tr
-            );
-
-        }
-    );
-
-
-    /*
-       事件监听
-    */
-
-    tbody
-    .querySelectorAll(
-        "button"
-    )
-    .forEach(
-        function(button) {
-
-
-            button.addEventListener(
-                "click",
-                function() {
-
-
-                    const id =
-                        button.dataset.id;
-
-
-                    const action =
-                        button.dataset.action;
-
-
-                    const item =
-                        allExperiments.find(
-                            function(x) {
-
-                                return
-                                    x.id === id;
-
-                            }
-                        );
-
-
-                    if (!item) {
-
-                        alert(
-                            "没有找到该实验数据。"
-                        );
-
-                        return;
-
-                    }
-
-
-                    if (
-                        action ===
-                        "view"
-                    ) {
-
-                        showDetails(
-                            item
-                        );
-
-                    }
-
-
-                    if (
-                        action ===
-                        "export"
-                    ) {
-
-                        exportSingle(
-                            item
-                        );
-
-                    }
-
-                }
-            );
-
-        }
-    );
-
-}
-
-
-
-/* ==================================================
    查看详情
 ================================================== */
 
@@ -1552,68 +1546,28 @@ function showDetails(item) {
 
 
     const clicks =
-        getClicks(item);
+        Array.isArray(
+            item.clicks
+        )
+        ?
+        item.clicks
+        :
+        [];
 
 
-    const condition =
-        item.conditionName
-        ||
-        (
-            item.condition
-            === "1"
-            ?
-            "自然选择"
-            :
-            "随机选择"
+    const sequence =
+        clicks.map(
+            function(click) {
+
+                return click.target;
+
+            }
         );
-
-
-    /*
-       目标序列
-    */
-
-    let sequenceHTML =
-        "暂无点击数据";
-
-
-    if (
-        clicks.length
-        >
-        0
-    ) {
-
-
-        sequenceHTML =
-            clicks.map(
-                function(click,index) {
-
-
-                    const target =
-                        getTarget(
-                            click
-                        );
-
-
-                    return `
-                        <span
-                            class="sequence-number"
-                        >
-                            ${escapeHTML(
-                                target
-                            )}
-                        </span>
-                    `;
-
-                }
-            ).join("");
-
-    }
 
 
     content.innerHTML = `
 
         <div class="detail-grid">
-
 
             <div class="detail-item">
 
@@ -1639,7 +1593,8 @@ function showDetails(item) {
 
                 <div class="detail-value">
                     ${escapeHTML(
-                        condition
+                        item.conditionName
+                        || "-"
                     )}
                 </div>
 
@@ -1654,7 +1609,7 @@ function showDetails(item) {
 
                 <div class="detail-value">
                     ${item.clickCount
-                        ?? clicks.length}
+                        ?? 0}
                 </div>
 
             </div>
@@ -1668,7 +1623,7 @@ function showDetails(item) {
 
                 <div class="detail-value">
                     ${item.experimentDuration
-                        ?? 360} 秒
+                        ?? 0} 秒
                 </div>
 
             </div>
@@ -1736,13 +1691,20 @@ function showDetails(item) {
 
 
         <h3>
-            点击目标序列
+            点击序列
         </h3>
 
 
         <div class="sequence-box">
 
-            ${sequenceHTML}
+            ${sequence.length
+                ?
+                sequence.join(
+                    " → "
+                )
+                :
+                "暂无点击数据"
+            }
 
         </div>
 
@@ -1757,46 +1719,20 @@ function showDetails(item) {
 
 
 document
-.getElementById(
-    "closeModal"
-)
-.addEventListener(
-    "click",
-    function() {
+    .getElementById(
+        "closeModal"
+    )
+    .addEventListener(
+        "click",
+        function() {
 
-        document.getElementById(
-            "detailModal"
-        ).style.display =
-            "none";
-
-    }
-);
-
-
-
-/* 点击弹窗外部关闭 */
-
-document
-.getElementById(
-    "detailModal"
-)
-.addEventListener(
-    "click",
-    function(event) {
-
-        if (
-            event.target.id
-            ===
-            "detailModal"
-        ) {
-
-            event.currentTarget.style.display =
+            document.getElementById(
+                "detailModal"
+            ).style.display =
                 "none";
 
         }
-
-    }
-);
+    );
 
 
 
@@ -1805,18 +1741,18 @@ document
 ================================================== */
 
 document
-.getElementById(
-    "searchInput"
-)
-.addEventListener(
-    "input",
-    renderTable
-);
+    .getElementById(
+        "searchInput"
+    )
+    .addEventListener(
+        "input",
+        renderTable
+    );
 
 
 
 /* ==================================================
-   Excel导出
+   Excel工具
 ================================================== */
 
 function createExcelFile(
@@ -1825,28 +1761,18 @@ function createExcelFile(
 ) {
 
 
-    if (
-        typeof XLSX
-        ===
-        "undefined"
-    ) {
-
-        alert(
-            "Excel功能正在加载，请稍等1秒后再试。"
-        );
-
-        return;
-
-    }
-
+    /*
+       使用SheetJS生成Excel
+    */
 
     const workbook =
         XLSX.utils.book_new();
 
 
-    /* ==========================
-       Sheet 1：实验信息
-    ========================== */
+    /*
+       Sheet 1
+       实验信息
+    */
 
     const experimentRows = [
 
@@ -1868,34 +1794,22 @@ function createExcelFile(
         function(item) {
 
 
-            const clicks =
-                getClicks(item);
-
-
             experimentRows.push([
 
                 item.participant
                     || "",
 
                 item.conditionName
-                    ||
-                    (
-                        item.condition
-                        === "1"
-                        ?
-                        "自然选择"
-                        :
-                        "随机选择"
-                    ),
+                    || "",
 
                 item.experimentStart
                     || "",
 
                 item.experimentDuration
-                    ?? 360,
+                    ?? 0,
 
                 item.clickCount
-                    ?? clicks.length,
+                    ?? 0,
 
                 item.bpm
                     ?? 120,
@@ -1925,10 +1839,10 @@ function createExcelFile(
     );
 
 
-
-    /* ==========================
-       Sheet 2：点击原始数据
-    ========================== */
+    /*
+       Sheet 2
+       点击原始数据
+    */
 
     const clickRows = [
 
@@ -1949,11 +1863,17 @@ function createExcelFile(
 
 
             const clicks =
-                getClicks(item);
+                Array.isArray(
+                    item.clicks
+                )
+                ?
+                item.clicks
+                :
+                [];
 
 
             clicks.forEach(
-                function(click,index) {
+                function(click) {
 
 
                     clickRows.push([
@@ -1962,31 +1882,19 @@ function createExcelFile(
                             || "",
 
                         item.conditionName
-                            ||
-                            (
-                                item.condition
-                                === "1"
-                                ?
-                                "自然选择"
-                                :
-                                "随机选择"
-                            ),
+                            || "",
 
                         click.sequence
-                            ??
-                            (index + 1),
+                            ?? "",
 
-                        getTarget(
-                            click
-                        ),
+                        click.target
+                            ?? "",
 
-                        getClickTime(
-                            click
-                        ),
+                        click.timestamp
+                            ?? "",
 
-                        getClickInterval(
-                            click
-                        )
+                        click.interval_s
+                            ?? ""
 
                     ]);
 
@@ -2010,7 +1918,9 @@ function createExcelFile(
     );
 
 
-    /* 下载 */
+    /*
+       下载
+    */
 
     XLSX.writeFile(
         workbook,
@@ -2026,39 +1936,41 @@ function createExcelFile(
 ================================================== */
 
 document
-.getElementById(
-    "exportAllButton"
-)
-.addEventListener(
-    "click",
-    function() {
+    .getElementById(
+        "exportAllButton"
+    )
+    .addEventListener(
+        "click",
+        function() {
 
 
-        if (
-            allExperiments.length
-            ===
-            0
-        ) {
+            if (
+                allExperiments.length
+                ===
+                0
+            ) {
 
-            alert(
-                "目前没有实验数据。"
+
+                alert(
+                    "目前没有实验数据。"
+                );
+
+
+                return;
+
+            }
+
+
+            createExcelFile(
+
+                allExperiments,
+
+                "鼠标随机性实验_全部数据.xlsx"
+
             );
 
-            return;
-
         }
-
-
-        createExcelFile(
-
-            allExperiments,
-
-            "鼠标随机性实验_全部数据.xlsx"
-
-        );
-
-    }
-);
+    );
 
 
 
@@ -2078,14 +1990,7 @@ function exportSingle(item) {
     const condition =
         item.conditionName
         ||
-        (
-            item.condition
-            === "1"
-            ?
-            "自然选择"
-            :
-            "随机选择"
-        );
+        "未知工况";
 
 
     createExcelFile(
@@ -2101,20 +2006,20 @@ function exportSingle(item) {
 
 
 /* ==================================================
-   加载Excel库
+   SheetJS
 ================================================== */
 
-const excelScript =
+const script =
     document.createElement(
         "script"
     );
 
 
-excelScript.src =
+script.src =
     "https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js";
 
 
-excelScript.onload =
+script.onload =
     function() {
 
         console.log(
@@ -2124,7 +2029,7 @@ excelScript.onload =
     };
 
 
-excelScript.onerror =
+script.onerror =
     function() {
 
         console.error(
@@ -2135,7 +2040,7 @@ excelScript.onerror =
 
 
 document.head.appendChild(
-    excelScript
+    script
 );
 
 
