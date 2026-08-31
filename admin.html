@@ -1,0 +1,2123 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>鼠标随机性实验后台</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family:
+        "Microsoft YaHei",
+        Arial,
+        sans-serif;
+    background: #f5f7fb;
+    color: #1f2937;
+}
+
+/* =========================
+   登录页面
+========================= */
+
+#loginPage {
+
+    min-height: 100vh;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background: #f5f7fb;
+}
+
+.login-box {
+
+    width: 360px;
+
+    background: white;
+
+    padding: 35px;
+
+    border-radius: 14px;
+
+    box-shadow:
+        0 8px 30px
+        rgba(0,0,0,0.08);
+
+    text-align: center;
+}
+
+.login-box h1 {
+
+    margin-top: 0;
+
+    margin-bottom: 8px;
+
+    font-size: 22px;
+}
+
+.login-box p {
+
+    color: #64748b;
+
+    font-size: 13px;
+
+    margin-bottom: 24px;
+}
+
+.login-box input {
+
+    width: 100%;
+
+    padding: 11px;
+
+    border:
+        1px solid #d1d5db;
+
+    border-radius: 8px;
+
+    font-size: 14px;
+
+    margin-bottom: 12px;
+}
+
+.login-box button {
+
+    width: 100%;
+
+    padding: 11px;
+
+    border: none;
+
+    border-radius: 8px;
+
+    background: #2563eb;
+
+    color: white;
+
+    cursor: pointer;
+
+    font-size: 14px;
+}
+
+.login-error {
+
+    color: #dc2626;
+
+    font-size: 13px;
+
+    margin-top: 10px;
+}
+
+
+/* =========================
+   后台主体
+========================= */
+
+#adminPage {
+
+    display: none;
+
+    min-height: 100vh;
+}
+
+header {
+
+    height: 68px;
+
+    background: white;
+
+    border-bottom:
+        1px solid #e5e7eb;
+
+    padding:
+        0 28px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+}
+
+header h1 {
+
+    margin: 0;
+
+    font-size: 21px;
+
+    font-weight: 600;
+}
+
+.header-right {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+}
+
+.logout {
+
+    padding: 7px 12px;
+
+    border:
+        1px solid #d1d5db;
+
+    background: white;
+
+    border-radius: 7px;
+
+    cursor: pointer;
+
+    font-size: 13px;
+}
+
+
+/* =========================
+   内容区域
+========================= */
+
+.container {
+
+    max-width: 1400px;
+
+    margin: 0 auto;
+
+    padding: 25px;
+}
+
+
+/* =========================
+   统计卡片
+========================= */
+
+.cards {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 16px;
+
+    margin-bottom: 20px;
+}
+
+.card {
+
+    background: white;
+
+    border:
+        1px solid #e5e7eb;
+
+    border-radius: 12px;
+
+    padding: 18px;
+}
+
+.card-title {
+
+    font-size: 13px;
+
+    color: #64748b;
+
+    margin-bottom: 8px;
+}
+
+.card-value {
+
+    font-size: 27px;
+
+    font-weight: 600;
+}
+
+
+/* =========================
+   操作栏
+========================= */
+
+.toolbar {
+
+    background: white;
+
+    border:
+        1px solid #e5e7eb;
+
+    border-radius: 12px;
+
+    padding: 15px;
+
+    margin-bottom: 15px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 10px;
+
+    flex-wrap: wrap;
+}
+
+.toolbar-left {
+
+    display: flex;
+
+    gap: 8px;
+
+    flex-wrap: wrap;
+}
+
+button {
+
+    border: none;
+
+    border-radius: 7px;
+
+    padding: 9px 13px;
+
+    font-size: 13px;
+
+    cursor: pointer;
+}
+
+.primary {
+
+    background: #2563eb;
+
+    color: white;
+}
+
+.secondary {
+
+    background: #e5e7eb;
+
+    color: #374151;
+}
+
+.success {
+
+    background: #16a34a;
+
+    color: white;
+}
+
+.search {
+
+    padding: 9px 11px;
+
+    border:
+        1px solid #d1d5db;
+
+    border-radius: 7px;
+
+    width: 220px;
+
+    font-size: 13px;
+}
+
+
+/* =========================
+   表格
+========================= */
+
+.table-box {
+
+    background: white;
+
+    border:
+        1px solid #e5e7eb;
+
+    border-radius: 12px;
+
+    overflow: auto;
+}
+
+table {
+
+    width: 100%;
+
+    border-collapse: collapse;
+
+    min-width: 850px;
+}
+
+th {
+
+    background: #f8fafc;
+
+    font-size: 13px;
+
+    color: #64748b;
+
+    font-weight: 500;
+
+    text-align: left;
+
+    padding: 13px 15px;
+
+    border-bottom:
+        1px solid #e5e7eb;
+}
+
+td {
+
+    padding: 13px 15px;
+
+    border-bottom:
+        1px solid #f0f0f0;
+
+    font-size: 13px;
+}
+
+tr:last-child td {
+
+    border-bottom: none;
+}
+
+.action-btn {
+
+    padding: 6px 9px;
+
+    font-size: 12px;
+
+    margin-right: 5px;
+}
+
+
+/* =========================
+   状态
+========================= */
+
+.empty {
+
+    text-align: center;
+
+    padding: 50px;
+
+    color: #94a3b8;
+
+    font-size: 14px;
+}
+
+.loading {
+
+    text-align: center;
+
+    padding: 40px;
+
+    color: #64748b;
+}
+
+
+/* =========================
+   详情弹窗
+========================= */
+
+.modal {
+
+    display: none;
+
+    position: fixed;
+
+    inset: 0;
+
+    background:
+        rgba(0,0,0,0.45);
+
+    z-index: 1000;
+
+    padding: 30px;
+
+    overflow: auto;
+}
+
+.modal-content {
+
+    background: white;
+
+    max-width: 1100px;
+
+    margin: 0 auto;
+
+    border-radius: 14px;
+
+    padding: 25px;
+
+}
+
+.modal-header {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin-bottom: 20px;
+}
+
+.modal-header h2 {
+
+    margin: 0;
+
+    font-size: 20px;
+}
+
+.close {
+
+    background: #e5e7eb;
+
+    color: #374151;
+
+    border-radius: 7px;
+
+    padding: 7px 12px;
+}
+
+.detail-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    gap: 12px;
+
+    margin-bottom: 20px;
+}
+
+.detail-item {
+
+    background: #f8fafc;
+
+    padding: 13px;
+
+    border-radius: 8px;
+}
+
+.detail-label {
+
+    font-size: 12px;
+
+    color: #64748b;
+
+    margin-bottom: 5px;
+}
+
+.detail-value {
+
+    font-size: 14px;
+
+    font-weight: 500;
+}
+
+.sequence-box {
+
+    background: #f8fafc;
+
+    border:
+        1px solid #e5e7eb;
+
+    border-radius: 8px;
+
+    padding: 15px;
+
+    max-height: 250px;
+
+    overflow: auto;
+
+    font-size: 13px;
+
+    line-height: 1.8;
+}
+
+
+/* =========================
+   响应式
+========================= */
+
+@media (max-width: 800px) {
+
+    .cards {
+
+        grid-template-columns: 1fr;
+    }
+
+    .detail-grid {
+
+        grid-template-columns:
+            repeat(2, 1fr);
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<!-- ==================================================
+     登录页面
+================================================== -->
+
+<div id="loginPage">
+
+    <div class="login-box">
+
+        <h1>
+            实验后台
+        </h1>
+
+        <p>
+            鼠标目标选择随机性实验
+        </p>
+
+        <input
+            id="passwordInput"
+            type="password"
+            placeholder="请输入后台密码"
+        >
+
+        <button
+            id="loginButton"
+        >
+            登录
+        </button>
+
+        <div
+            id="loginError"
+            class="login-error"
+        ></div>
+
+    </div>
+
+</div>
+
+
+
+<!-- ==================================================
+     后台页面
+================================================== -->
+
+<div id="adminPage">
+
+
+<header>
+
+    <h1>
+        鼠标随机性实验后台
+    </h1>
+
+    <div class="header-right">
+
+        <span
+            style="
+            font-size:13px;
+            color:#64748b;
+            "
+        >
+            数据实时同步
+        </span>
+
+        <button
+            class="logout"
+            id="logoutButton"
+        >
+            退出
+        </button>
+
+    </div>
+
+</header>
+
+
+
+<div class="container">
+
+
+    <!-- =========================
+         统计
+    ========================= -->
+
+    <div class="cards">
+
+        <div class="card">
+
+            <div class="card-title">
+                总实验次数
+            </div>
+
+            <div
+                class="card-value"
+                id="totalCount"
+            >
+                0
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="card-title">
+                工况1：自然选择
+            </div>
+
+            <div
+                class="card-value"
+                id="condition1Count"
+            >
+                0
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="card-title">
+                工况2：随机选择
+            </div>
+
+            <div
+                class="card-value"
+                id="condition2Count"
+            >
+                0
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =========================
+         操作
+    ========================= -->
+
+    <div class="toolbar">
+
+        <div class="toolbar-left">
+
+            <button
+                class="primary"
+                id="exportAllButton"
+            >
+                导出全部数据
+            </button>
+
+        </div>
+
+
+        <input
+            id="searchInput"
+            class="search"
+            type="text"
+            placeholder="搜索被试者姓名"
+        >
+
+    </div>
+
+
+
+    <!-- =========================
+         表格
+    ========================= -->
+
+    <div class="table-box">
+
+        <div
+            id="loading"
+            class="loading"
+        >
+            正在读取实验数据……
+        </div>
+
+
+        <table
+            id="dataTable"
+            style="display:none"
+        >
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        被试者姓名
+                    </th>
+
+                    <th>
+                        工况
+                    </th>
+
+                    <th>
+                        点击次数
+                    </th>
+
+                    <th>
+                        实验时长
+                    </th>
+
+                    <th>
+                        BPM
+                    </th>
+
+                    <th>
+                        开始时间
+                    </th>
+
+                    <th>
+                        操作
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody
+                id="dataBody"
+            ></tbody>
+
+        </table>
+
+
+        <div
+            id="empty"
+            class="empty"
+            style="display:none"
+        >
+            暂无实验数据
+        </div>
+
+    </div>
+
+
+</div>
+
+
+</div>
+
+
+
+<!-- ==================================================
+     详情弹窗
+================================================== -->
+
+<div
+    id="detailModal"
+    class="modal"
+>
+
+    <div class="modal-content">
+
+
+        <div class="modal-header">
+
+            <h2>
+                实验详情
+            </h2>
+
+            <button
+                class="close"
+                id="closeModal"
+            >
+                关闭
+            </button>
+
+        </div>
+
+
+        <div
+            id="detailContent"
+        ></div>
+
+
+    </div>
+
+</div>
+
+
+
+<!-- ==================================================
+     Firebase
+================================================== -->
+
+<script type="module">
+
+
+import {
+    initializeApp
+} from
+"https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+
+
+import {
+    getAuth,
+    signInAnonymously
+} from
+"https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+
+
+import {
+    getFirestore,
+    collection,
+    onSnapshot
+} from
+"https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+
+
+
+/* ==================================================
+   Firebase配置
+================================================== */
+
+const firebaseConfig = {
+
+    apiKey:
+        "AIzaSyCjuXIRHuHe31rr3ro8OfqEBJQSqo_Vwzw",
+
+    authDomain:
+        "mouse-randomness-experiment.firebaseapp.com",
+
+    projectId:
+        "mouse-randomness-experiment",
+
+    storageBucket:
+        "mouse-randomness-experiment.firebasestorage.app",
+
+    messagingSenderId:
+        "200186780535",
+
+    appId:
+        "1:200186780535:web:e2fe9cb91015130a3e1f72"
+
+};
+
+
+const app =
+    initializeApp(
+        firebaseConfig
+    );
+
+
+const auth =
+    getAuth(app);
+
+
+const db =
+    getFirestore(app);
+
+
+
+/* ==================================================
+   页面变量
+================================================== */
+
+let allExperiments = [];
+
+
+
+/* ==================================================
+   后台密码
+================================================== */
+
+const ADMIN_PASSWORD =
+    "123456";
+
+
+
+/* ==================================================
+   登录
+================================================== */
+
+const loginPage =
+    document.getElementById(
+        "loginPage"
+    );
+
+
+const adminPage =
+    document.getElementById(
+        "adminPage"
+    );
+
+
+const passwordInput =
+    document.getElementById(
+        "passwordInput"
+    );
+
+
+const loginButton =
+    document.getElementById(
+        "loginButton"
+    );
+
+
+const loginError =
+    document.getElementById(
+        "loginError"
+    );
+
+
+function login() {
+
+
+    if (
+        passwordInput.value
+        ===
+        ADMIN_PASSWORD
+    ) {
+
+
+        loginPage.style.display =
+            "none";
+
+
+        adminPage.style.display =
+            "block";
+
+
+        startFirebase();
+
+    }
+
+
+    else {
+
+
+        loginError.textContent =
+            "密码错误，请重新输入。";
+
+
+        passwordInput.value =
+            "";
+
+    }
+
+}
+
+
+loginButton.addEventListener(
+    "click",
+    login
+);
+
+
+passwordInput.addEventListener(
+    "keydown",
+    function(event) {
+
+        if (
+            event.key ===
+            "Enter"
+        ) {
+
+            login();
+
+        }
+
+    }
+);
+
+
+
+/* ==================================================
+   退出
+================================================== */
+
+document
+    .getElementById(
+        "logoutButton"
+    )
+    .addEventListener(
+        "click",
+        function() {
+
+            adminPage.style.display =
+                "none";
+
+            loginPage.style.display =
+                "flex";
+
+            passwordInput.value =
+                "";
+
+        }
+    );
+
+
+
+/* ==================================================
+   Firebase匿名登录
+================================================== */
+
+async function startFirebase() {
+
+
+    try {
+
+
+        await signInAnonymously(
+            auth
+        );
+
+
+        listenToData();
+
+
+    }
+
+    catch (error) {
+
+
+        console.error(
+            error
+        );
+
+
+        document.getElementById(
+            "loading"
+        ).textContent =
+            "Firebase连接失败，请检查配置。";
+
+    }
+
+}
+
+
+
+/* ==================================================
+   实时监听数据库
+================================================== */
+
+function listenToData() {
+
+
+    const experimentsRef =
+        collection(
+            db,
+            "experiments"
+        );
+
+
+    onSnapshot(
+
+        experimentsRef,
+
+        function(snapshot) {
+
+
+            allExperiments =
+                [];
+
+
+            snapshot.forEach(
+                function(doc) {
+
+
+                    allExperiments.push({
+
+                        id:
+                            doc.id,
+
+                        ...doc.data()
+
+                    });
+
+                }
+            );
+
+
+            /*
+               最新实验放在最上面
+            */
+
+            allExperiments.sort(
+                function(a,b) {
+
+                    const timeA =
+                        a.experimentStart
+                        || "";
+
+                    const timeB =
+                        b.experimentStart
+                        || "";
+
+                    return
+                        timeB.localeCompare(
+                            timeA
+                        );
+
+                }
+            );
+
+
+            updateStatistics();
+
+
+            renderTable();
+
+        },
+
+        function(error) {
+
+
+            console.error(
+                "读取数据失败：",
+                error
+            );
+
+
+            document.getElementById(
+                "loading"
+            ).textContent =
+                "读取数据失败。";
+
+        }
+
+    );
+
+}
+
+
+
+/* ==================================================
+   统计
+================================================== */
+
+function updateStatistics() {
+
+
+    const total =
+        allExperiments.length;
+
+
+    const c1 =
+        allExperiments.filter(
+            function(item) {
+
+                return item.condition === "1";
+
+            }
+        ).length;
+
+
+    const c2 =
+        allExperiments.filter(
+            function(item) {
+
+                return item.condition === "2";
+
+            }
+        ).length;
+
+
+    document.getElementById(
+        "totalCount"
+    ).textContent =
+        total;
+
+
+    document.getElementById(
+        "condition1Count"
+    ).textContent =
+        c1;
+
+
+    document.getElementById(
+        "condition2Count"
+    ).textContent =
+        c2;
+
+}
+
+
+
+/* ==================================================
+   格式化时间
+================================================== */
+
+function formatTime(value) {
+
+
+    if (!value) {
+
+        return "-";
+
+    }
+
+
+    const date =
+        new Date(value);
+
+
+    if (
+        isNaN(
+            date.getTime()
+        )
+    ) {
+
+        return value;
+
+    }
+
+
+    return date.toLocaleString(
+        "zh-CN",
+        {
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit"
+        }
+    );
+
+}
+
+
+
+/* ==================================================
+   表格
+================================================== */
+
+function renderTable() {
+
+
+    const loading =
+        document.getElementById(
+            "loading"
+        );
+
+
+    const table =
+        document.getElementById(
+            "dataTable"
+        );
+
+
+    const empty =
+        document.getElementById(
+            "empty"
+        );
+
+
+    const tbody =
+        document.getElementById(
+            "dataBody"
+        );
+
+
+    loading.style.display =
+        "none";
+
+
+    const keyword =
+        document.getElementById(
+            "searchInput"
+        )
+        .value
+        .trim()
+        .toLowerCase();
+
+
+    const filtered =
+        allExperiments.filter(
+            function(item) {
+
+                return (
+                    !keyword
+                    ||
+                    String(
+                        item.participant
+                        || ""
+                    )
+                    .toLowerCase()
+                    .includes(
+                        keyword
+                    )
+                );
+
+            }
+        );
+
+
+    tbody.innerHTML =
+        "";
+
+
+    if (
+        filtered.length === 0
+    ) {
+
+
+        table.style.display =
+            "none";
+
+
+        empty.style.display =
+            "block";
+
+
+        return;
+
+    }
+
+
+    table.style.display =
+        "table";
+
+
+    empty.style.display =
+        "none";
+
+
+    filtered.forEach(
+        function(item) {
+
+
+            const tr =
+                document.createElement(
+                    "tr"
+                );
+
+
+            const condition =
+                item.conditionName
+                ||
+                (
+                    item.condition === "1"
+                    ? "自然选择"
+                    : "随机选择"
+                );
+
+
+            tr.innerHTML = `
+
+                <td>
+                    ${escapeHTML(
+                        item.participant
+                        || "-"
+                    )}
+                </td>
+
+                <td>
+                    ${escapeHTML(
+                        condition
+                    )}
+                </td>
+
+                <td>
+                    ${item.clickCount
+                        ?? 0}
+                </td>
+
+                <td>
+                    ${item.experimentDuration
+                        ?? 0} s
+                </td>
+
+                <td>
+                    ${item.bpm
+                        ?? 120}
+                </td>
+
+                <td>
+                    ${formatTime(
+                        item.experimentStart
+                    )}
+                </td>
+
+                <td>
+
+                    <button
+                        class="secondary action-btn"
+                        data-action="view"
+                        data-id="${item.id}"
+                    >
+                        查看
+                    </button>
+
+                    <button
+                        class="success action-btn"
+                        data-action="export"
+                        data-id="${item.id}"
+                    >
+                        导出
+                    </button>
+
+                </td>
+
+            `;
+
+
+            tbody.appendChild(
+                tr
+            );
+
+        }
+    );
+
+
+    /*
+       给按钮添加事件
+    */
+
+    tbody
+        .querySelectorAll(
+            "button"
+        )
+        .forEach(
+            function(button) {
+
+
+                button.addEventListener(
+                    "click",
+                    function() {
+
+
+                        const id =
+                            button.dataset.id;
+
+
+                        const action =
+                            button.dataset.action;
+
+
+                        const item =
+                            allExperiments.find(
+                                function(x) {
+
+                                    return
+                                        x.id === id;
+
+                                }
+                            );
+
+
+                        if (!item) {
+
+                            return;
+
+                        }
+
+
+                        if (
+                            action ===
+                            "view"
+                        ) {
+
+                            showDetails(
+                                item
+                            );
+
+                        }
+
+
+                        if (
+                            action ===
+                            "export"
+                        ) {
+
+                            exportSingle(
+                                item
+                            );
+
+                        }
+
+                    }
+                );
+
+            }
+        );
+
+}
+
+
+
+/* ==================================================
+   防止HTML注入
+================================================== */
+
+function escapeHTML(value) {
+
+
+    return String(value)
+
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+
+        .replace(
+            /</g,
+            "&lt;"
+        )
+
+        .replace(
+            />/g,
+            "&gt;"
+        )
+
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+
+        .replace(
+            /'/g,
+            "&#039;"
+        );
+
+}
+
+
+
+/* ==================================================
+   查看详情
+================================================== */
+
+function showDetails(item) {
+
+
+    const modal =
+        document.getElementById(
+            "detailModal"
+        );
+
+
+    const content =
+        document.getElementById(
+            "detailContent"
+        );
+
+
+    const clicks =
+        Array.isArray(
+            item.clicks
+        )
+        ?
+        item.clicks
+        :
+        [];
+
+
+    const sequence =
+        clicks.map(
+            function(click) {
+
+                return click.target;
+
+            }
+        );
+
+
+    content.innerHTML = `
+
+        <div class="detail-grid">
+
+            <div class="detail-item">
+
+                <div class="detail-label">
+                    被试者
+                </div>
+
+                <div class="detail-value">
+                    ${escapeHTML(
+                        item.participant
+                        || "-"
+                    )}
+                </div>
+
+            </div>
+
+
+            <div class="detail-item">
+
+                <div class="detail-label">
+                    工况
+                </div>
+
+                <div class="detail-value">
+                    ${escapeHTML(
+                        item.conditionName
+                        || "-"
+                    )}
+                </div>
+
+            </div>
+
+
+            <div class="detail-item">
+
+                <div class="detail-label">
+                    点击次数
+                </div>
+
+                <div class="detail-value">
+                    ${item.clickCount
+                        ?? 0}
+                </div>
+
+            </div>
+
+
+            <div class="detail-item">
+
+                <div class="detail-label">
+                    实验时长
+                </div>
+
+                <div class="detail-value">
+                    ${item.experimentDuration
+                        ?? 0} 秒
+                </div>
+
+            </div>
+
+
+            <div class="detail-item">
+
+                <div class="detail-label">
+                    节奏
+                </div>
+
+                <div class="detail-value">
+                    ${item.bpm
+                        ?? 120} BPM
+                </div>
+
+            </div>
+
+
+            <div class="detail-item">
+
+                <div class="detail-label">
+                    节拍
+                </div>
+
+                <div class="detail-value">
+                    ${escapeHTML(
+                        item.meter
+                        || "4/4"
+                    )}
+                </div>
+
+            </div>
+
+
+            <div class="detail-item">
+
+                <div class="detail-label">
+                    开始时间
+                </div>
+
+                <div class="detail-value">
+                    ${formatTime(
+                        item.experimentStart
+                    )}
+                </div>
+
+            </div>
+
+
+            <div class="detail-item">
+
+                <div class="detail-label">
+                    目标数量
+                </div>
+
+                <div class="detail-value">
+                    ${item.targetCount
+                        ?? 5}
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <h3>
+            点击序列
+        </h3>
+
+
+        <div class="sequence-box">
+
+            ${sequence.length
+                ?
+                sequence.join(
+                    " → "
+                )
+                :
+                "暂无点击数据"
+            }
+
+        </div>
+
+    `;
+
+
+    modal.style.display =
+        "block";
+
+}
+
+
+
+document
+    .getElementById(
+        "closeModal"
+    )
+    .addEventListener(
+        "click",
+        function() {
+
+            document.getElementById(
+                "detailModal"
+            ).style.display =
+                "none";
+
+        }
+    );
+
+
+
+/* ==================================================
+   搜索
+================================================== */
+
+document
+    .getElementById(
+        "searchInput"
+    )
+    .addEventListener(
+        "input",
+        renderTable
+    );
+
+
+
+/* ==================================================
+   Excel工具
+================================================== */
+
+function createExcelFile(
+    experiments,
+    filename
+) {
+
+
+    /*
+       使用SheetJS生成Excel
+    */
+
+    const workbook =
+        XLSX.utils.book_new();
+
+
+    /*
+       Sheet 1
+       实验信息
+    */
+
+    const experimentRows = [
+
+        [
+            "被试者姓名",
+            "工况",
+            "开始时间",
+            "实验时长(s)",
+            "点击次数",
+            "BPM",
+            "节拍",
+            "目标数量"
+        ]
+
+    ];
+
+
+    experiments.forEach(
+        function(item) {
+
+
+            experimentRows.push([
+
+                item.participant
+                    || "",
+
+                item.conditionName
+                    || "",
+
+                item.experimentStart
+                    || "",
+
+                item.experimentDuration
+                    ?? 0,
+
+                item.clickCount
+                    ?? 0,
+
+                item.bpm
+                    ?? 120,
+
+                item.meter
+                    || "4/4",
+
+                item.targetCount
+                    ?? 5
+
+            ]);
+
+        }
+    );
+
+
+    const sheet1 =
+        XLSX.utils.aoa_to_sheet(
+            experimentRows
+        );
+
+
+    XLSX.utils.book_append_sheet(
+        workbook,
+        sheet1,
+        "实验信息"
+    );
+
+
+    /*
+       Sheet 2
+       点击原始数据
+    */
+
+    const clickRows = [
+
+        [
+            "被试者姓名",
+            "工况",
+            "点击序号",
+            "目标点",
+            "点击时间",
+            "与上次点击间隔(s)"
+        ]
+
+    ];
+
+
+    experiments.forEach(
+        function(item) {
+
+
+            const clicks =
+                Array.isArray(
+                    item.clicks
+                )
+                ?
+                item.clicks
+                :
+                [];
+
+
+            clicks.forEach(
+                function(click) {
+
+
+                    clickRows.push([
+
+                        item.participant
+                            || "",
+
+                        item.conditionName
+                            || "",
+
+                        click.sequence
+                            ?? "",
+
+                        click.target
+                            ?? "",
+
+                        click.timestamp
+                            ?? "",
+
+                        click.interval_s
+                            ?? ""
+
+                    ]);
+
+                }
+            );
+
+        }
+    );
+
+
+    const sheet2 =
+        XLSX.utils.aoa_to_sheet(
+            clickRows
+        );
+
+
+    XLSX.utils.book_append_sheet(
+        workbook,
+        sheet2,
+        "点击原始数据"
+    );
+
+
+    /*
+       下载
+    */
+
+    XLSX.writeFile(
+        workbook,
+        filename
+    );
+
+}
+
+
+
+/* ==================================================
+   导出全部
+================================================== */
+
+document
+    .getElementById(
+        "exportAllButton"
+    )
+    .addEventListener(
+        "click",
+        function() {
+
+
+            if (
+                allExperiments.length
+                ===
+                0
+            ) {
+
+
+                alert(
+                    "目前没有实验数据。"
+                );
+
+
+                return;
+
+            }
+
+
+            createExcelFile(
+
+                allExperiments,
+
+                "鼠标随机性实验_全部数据.xlsx"
+
+            );
+
+        }
+    );
+
+
+
+/* ==================================================
+   导出单个被试
+================================================== */
+
+function exportSingle(item) {
+
+
+    const name =
+        item.participant
+        ||
+        "未命名被试";
+
+
+    const condition =
+        item.conditionName
+        ||
+        "未知工况";
+
+
+    createExcelFile(
+
+        [item],
+
+        `鼠标随机性实验_${name}_${condition}.xlsx`
+
+    );
+
+}
+
+
+
+/* ==================================================
+   SheetJS
+================================================== */
+
+const script =
+    document.createElement(
+        "script"
+    );
+
+
+script.src =
+    "https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js";
+
+
+script.onload =
+    function() {
+
+        console.log(
+            "Excel导出功能已加载"
+        );
+
+    };
+
+
+script.onerror =
+    function() {
+
+        console.error(
+            "Excel库加载失败"
+        );
+
+    };
+
+
+document.head.appendChild(
+    script
+);
+
+
+</script>
+
+</body>
+
+</html>
