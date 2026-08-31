@@ -593,10 +593,16 @@ tr:last-child td {
         </p>
 
         <input
-            id="passwordInput"
-            type="password"
-            placeholder="请输入后台密码"
-        >
+    id="emailInput"
+    type="email"
+    placeholder="请输入管理员邮箱"
+>
+
+<input
+    id="passwordInput"
+    type="password"
+    placeholder="请输入管理员密码"
+>
 
         <button
             id="loginButton"
@@ -876,7 +882,7 @@ import {
 
 import {
     getAuth,
-    signInAnonymously
+    signInWithEmailAndPassword
 } from
 "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
 
@@ -941,16 +947,7 @@ let allExperiments = [];
 
 
 /* ==================================================
-   后台密码
-================================================== */
-
-const ADMIN_PASSWORD =
-    "Ad13579";
-
-
-
-/* ==================================================
-   登录
+   Firebase管理员登录
 ================================================== */
 
 const loginPage =
@@ -962,6 +959,12 @@ const loginPage =
 const adminPage =
     document.getElementById(
         "adminPage"
+    );
+
+
+const emailInput =
+    document.getElementById(
+        "emailInput"
     );
 
 
@@ -983,14 +986,32 @@ const loginError =
     );
 
 
-function login() {
+async function login() {
+
+    loginError.textContent = "";
+
+    const email =
+        emailInput.value.trim();
+
+    const password =
+        passwordInput.value;
+
+    if (!email || !password) {
+
+        loginError.textContent =
+            "请输入邮箱和密码。";
+
+        return;
+    }
 
 
-    if (
-        passwordInput.value
-        ===
-        ADMIN_PASSWORD
-    ) {
+    try {
+
+        await signInWithEmailAndPassword(
+            auth,
+            email,
+            password
+        );
 
 
         loginPage.style.display =
@@ -1001,16 +1022,20 @@ function login() {
             "block";
 
 
-        startFirebase();
+        listenToData();
 
     }
 
+    catch (error) {
 
-    else {
+        console.error(
+            "管理员登录失败：",
+            error
+        );
 
 
         loginError.textContent =
-            "密码错误，请重新输入。";
+            "邮箱或密码错误，请重新输入。";
 
 
         passwordInput.value =
@@ -1032,8 +1057,7 @@ passwordInput.addEventListener(
     function(event) {
 
         if (
-            event.key ===
-            "Enter"
+            event.key === "Enter"
         ) {
 
             login();
@@ -1077,27 +1101,18 @@ document
 
 async function startFirebase() {
 
-
     try {
 
-
-        await signInAnonymously(
-            auth
-        );
-
-
         listenToData();
-
 
     }
 
     catch (error) {
 
-
         console.error(
+            "读取数据失败：",
             error
         );
-
 
         document.getElementById(
             "loading"
