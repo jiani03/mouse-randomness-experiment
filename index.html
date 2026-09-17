@@ -107,7 +107,8 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
-    import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+import { getFirestore, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
     import { getFirestore, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
     // 保留原 Firebase 项目配置。
@@ -120,8 +121,7 @@
       appId: "1:200186780535:web:e2fe9cb91015130a3e1f72"
     };
     const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
+const db = getFirestore(app);
     const $ = id => document.getElementById(id);
     const screens = ["intro", "formScreen", "stagePrompt", "countdownScreen", "experiment", "rest", "finish"];
     const STAGE_MS = 10000;
@@ -288,18 +288,17 @@
       $("finishMessage").className = "";
       $("finishMessage").textContent = "正在上传数据，请保持页面打开……";
       try {
-        if (!auth.currentUser) await signInAnonymously(auth);
-        await setDoc(doc(db, "experiments", data.participantId), {
-          participantId: data.participantId,
-          personalInformation: data.personalInformation,
-          stage1: data.stage1,
-          stage2: data.stage2,
-          userId: auth.currentUser.uid,
-          bpm: 120,
-          meter: "4/4",
-          targetCount: 5,
-          createdAt: serverTimestamp()
-        });
+
+  await setDoc(doc(db, "experiments", data.participantId), {
+    participantId: data.participantId,
+    personalInformation: data.personalInformation,
+    stage1: data.stage1,
+    stage2: data.stage2,
+    bpm: 120,
+    meter: "4/4",
+    targetCount: 5,
+    createdAt: serverTimestamp()
+  });
         $("finishTitle").textContent = "实验完成";
         $("finishMessage").className = "success";
         $("finishMessage").textContent = "数据已上传，感谢参与。您现在可以退出页面。";
