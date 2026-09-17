@@ -124,7 +124,7 @@
     const db = getFirestore(app);
     const $ = id => document.getElementById(id);
     const screens = ["intro", "formScreen", "stagePrompt", "countdownScreen", "experiment", "rest", "finish"];
-    const STAGE_MS = 360000;
+    const STAGE_MS = 10000;
     const prompts = {
       1: "请按照您平时的操作习惯完成目标选择。节拍器仅作为操作节奏参考，请根据提示完成操作。",
       2: "请尝试避免形成固定的选择模式，完成目标选择。节拍器仅作为操作节奏参考，请根据提示完成操作。"
