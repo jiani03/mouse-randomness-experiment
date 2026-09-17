@@ -305,6 +305,10 @@
         $("finishMessage").textContent = "数据已上传，感谢参与。您现在可以退出页面。";
       } catch (error) {
         console.error("数据上传失败：", error);
+alert(
+  "错误代码：" + error.code +
+  "\n错误信息：" + error.message
+);
         $("finishTitle").textContent = "上传未完成";
         $("finishMessage").className = "error";
         $("finishMessage").textContent = "数据上传失败，请保持页面打开并点击“重新上传”。如仍失败，请联系实验人员。";
