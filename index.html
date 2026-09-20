@@ -282,25 +282,53 @@ async function uploadData() {
 
   try {
 
-fetch(scriptURL, {
+    // 第一步：提交数据
+    await fetch(scriptURL, {
 
-  method: "POST",
+      method: "POST",
 
-  body: JSON.stringify({
+      body: JSON.stringify({
 
-    participantId: data.participantId,
-    personalInformation: data.personalInformation,
-    stage1: data.stage1,
-    stage2: data.stage2,
-    bpm:120,
-    meter:"4/4",
-    targetCount:5
+        participantId: data.participantId,
 
-  })
+        personalInformation: data.personalInformation,
 
-});
+        stage1: data.stage1,
+
+        stage2: data.stage2,
+
+        bpm: 120,
+
+        meter: "4/4",
+
+        targetCount: 5
+
+      })
+
+    });
 
 
+    // 第二步：等待一下，让Sheet完成写入
+    await new Promise(resolve => setTimeout(resolve, 1000));
+
+
+    // 第三步：查询是否真的保存成功
+    const check = await fetch(
+      scriptURL + "?participantId=" + data.participantId
+    );
+
+
+    const result = await check.text();
+
+
+    if (result.trim() !== "success") {
+
+      throw new Error("数据未确认");
+
+    }
+
+
+    // 确认成功
     $("finishTitle").textContent = "实验完成";
 
     $("finishMessage").className = "success";
@@ -324,7 +352,6 @@ fetch(scriptURL, {
 
 
     $("retryUpload").hidden = false;
-
 
   }
 
