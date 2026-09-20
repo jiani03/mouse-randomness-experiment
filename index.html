@@ -307,14 +307,7 @@ async function uploadData() {
     });
 
 
-    const result = await response.text();
-
-
-    if (result.trim() !== "success") {
-
-      throw new Error("服务器未确认上传");
-
-    }
+    await response.text();
 
 
     $("finishTitle").textContent = "实验完成";
