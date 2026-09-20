@@ -984,7 +984,8 @@ let infoData = [
 "精神状态",
 "压力",
 "惯用手",
-"完成时间"
+"实验开始时间",
+"实验完成时间"
 ]
 ];
 
@@ -1029,6 +1030,8 @@ info.mentalState || "",
 info.stress || "",
 
 info.handedness || "",
+
+formatTime(item.stage1.startedAt),
 
 formatTime(item.createdAt)
 
