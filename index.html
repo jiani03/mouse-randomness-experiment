@@ -273,7 +273,8 @@ async function uploadData() {
   $("retryUpload").hidden = true;
   $("finishTitle").textContent = "实验结束";
   $("finishMessage").className = "";
-  $("finishMessage").textContent = "正在上传数据，请保持页面打开……";
+  $("finishMessage").textContent =
+    "正在上传数据，请保持页面打开……";
 
 
   const scriptURL = "https://script.google.com/macros/s/AKfycbxTt7cJxGSr1hRc75sHJ7QeGsRJKjH06MuQtYA6ycKueMsDtu2tVv5kNg3d6c-St6EJ/exec";
@@ -281,36 +282,65 @@ async function uploadData() {
 
   try {
 
-    await fetch(scriptURL, {
+    const response = await fetch(scriptURL, {
+
       method: "POST",
+
       body: JSON.stringify({
+
         participantId: data.participantId,
+
         personalInformation: data.personalInformation,
+
         stage1: data.stage1,
+
         stage2: data.stage2,
+
         bpm: 120,
+
         meter: "4/4",
+
         targetCount: 5
+
       })
+
     });
 
 
+    const result = await response.text();
+
+
+    if (result.trim() !== "success") {
+
+      throw new Error("服务器未确认上传");
+
+    }
+
+
     $("finishTitle").textContent = "实验完成";
+
     $("finishMessage").className = "success";
+
     $("finishMessage").textContent =
       "数据已上传，感谢参与。您现在可以退出页面。";
 
 
   } catch(error) {
 
-    console.error(error);
+
+    console.error("上传失败：", error);
+
 
     $("finishTitle").textContent = "上传未完成";
+
     $("finishMessage").className = "error";
+
     $("finishMessage").textContent =
       "数据上传失败，请重新尝试。";
 
+
     $("retryUpload").hidden = false;
+
 
   }
 
