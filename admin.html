@@ -180,7 +180,7 @@ th,td{
 
 </style>
     
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     
 </head>
 
@@ -611,7 +611,17 @@ console.error(error);
 
 
 
+function formatTime(time){
 
+    if(!time){
+        return "";
+    }
+
+    return new Date(time).toLocaleString("zh-CN");
+
+}
+
+    
 // ======================
 // 渲染列表
 // ======================
@@ -667,7 +677,7 @@ ${stage2}
 
 
 <td>
-${item.createdAt || ""}
+${formatTime(item.createdAt)}
 </td>
 
 
@@ -963,37 +973,66 @@ item.participantId
 function exportExcel(data,name="实验数据"){
 
 
-let infoCSV =
-"Participant ID,年龄,性别,教育程度,职业,疲劳,精神状态,压力,惯用手,完成时间\n";
+let infoData = [
+[
+"Participant ID",
+"年龄",
+"性别",
+"教育程度",
+"职业",
+"疲劳",
+"精神状态",
+"压力",
+"惯用手",
+"完成时间"
+]
+];
 
 
-
-let clickCSV =
-"Participant ID,阶段,序号,目标点,时间戳,阶段时间,间隔时间\n";
-
+let clickData = [
+[
+"Participant ID",
+"阶段",
+"序号",
+"目标点",
+"时间戳",
+"阶段时间",
+"间隔时间"
+]
+];
 
 
 
 data.forEach(item=>{
 
 
-const info =
-item.personalInformation;
+const info=item.personalInformation;
 
 
 
-infoCSV +=
-`${item.participantId},
-${info.age},
-${info.gender},
-${info.education},
-${info.occupation},
-${info.fatigue},
-${info.mentalState},
-${info.stress},
-${info.handedness},
-${item.createdAt}\n`;
+infoData.push([
 
+item.participantId,
+
+info.age || "",
+
+info.gender || "",
+
+info.education || "",
+
+info.occupation || "",
+
+info.fatigue || "",
+
+info.mentalState || "",
+
+info.stress || "",
+
+info.handedness || "",
+
+item.createdAt || ""
+
+]);
 
 
 
@@ -1002,17 +1041,35 @@ ${item.createdAt}\n`;
 .forEach((stage,index)=>{
 
 
+if(stage && stage.clicks){
+
+
 stage.clicks.forEach(click=>{
 
 
-clickCSV +=
-`${item.participantId},
-${index+1},
-${click.sequence},
-${click.target},
-${click.timestamp},
-${click.elapsed_s},
-${click.interval_s||""}\n`;
+clickData.push([
+
+item.participantId,
+
+index+1,
+
+click.sequence,
+
+click.target,
+
+click.timestamp,
+
+click.elapsed_s,
+
+click.interval_s || ""
+
+]);
+
+
+});
+
+
+}
 
 
 
@@ -1022,24 +1079,19 @@ ${click.interval_s||""}\n`;
 });
 
 
-});
 
 
 
-
-// 生成xlsx需要SheetJS
-
-const wb =
-XLSX.utils.book_new();
+const wb = XLSX.utils.book_new();
 
 
 
 const ws1 =
-XLSX.utils.csv_to_sheet(infoCSV);
+XLSX.utils.aoa_to_sheet(infoData);
 
 
 const ws2 =
-XLSX.utils.csv_to_sheet(clickCSV);
+XLSX.utils.aoa_to_sheet(clickData);
 
 
 
@@ -1048,7 +1100,6 @@ wb,
 ws1,
 "Participant_Info"
 );
-
 
 
 XLSX.utils.book_append_sheet(
