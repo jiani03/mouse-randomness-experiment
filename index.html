@@ -287,7 +287,8 @@ const db = getFirestore(app);
       $("finishMessage").textContent = "正在上传数据，请保持页面打开……";
       try {
 
-  await setDoc(doc(db, "experiments", data.participantId), {
+  await Promise.race([
+  setDoc(doc(db, "experiments", data.participantId), {
     participantId: data.participantId,
     personalInformation: data.personalInformation,
     stage1: data.stage1,
@@ -296,7 +297,11 @@ const db = getFirestore(app);
     meter: "4/4",
     targetCount: 5,
     createdAt: serverTimestamp()
-  });
+  }),
+  new Promise((_, reject) =>
+    setTimeout(() => reject(new Error("上传超时")), 10000)
+  )
+]);
         $("finishTitle").textContent = "实验完成";
         $("finishMessage").className = "success";
         $("finishMessage").textContent = "数据已上传，感谢参与。您现在可以退出页面。";
