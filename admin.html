@@ -1,194 +1,1076 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
+
 <meta charset="UTF-8">
+
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>鼠标随机性实验后台</title>
+
+<title>目标选择实验后台</title>
+
+
 <style>
-body{font-family:"Microsoft YaHei",Arial;margin:0;background:#f5f7fb;color:#1f2937}
-header{background:#fff;padding:18px 30px;border-bottom:1px solid #ddd;display:flex;justify-content:space-between}
-.container{max-width:1200px;margin:auto;padding:25px}
-.card{background:#fff;border-radius:12px;padding:20px;margin-bottom:20px}
-button{background:#2563eb;color:#fff;border:0;border-radius:8px;padding:9px 15px;cursor:pointer}
-input{padding:10px;border:1px solid #ccc;border-radius:8px;width:260px;margin:5px}
-table{width:100%;border-collapse:collapse;background:#fff}
-th,td{padding:12px;border-bottom:1px solid #eee;text-align:left}
-.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);padding:30px}
-.modal-box{background:#fff;max-width:900px;margin:auto;padding:25px;border-radius:12px}
-.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
-.item{background:#f8fafc;padding:10px;border-radius:8px}
+
+body{
+    font-family:"Microsoft YaHei",Arial;
+    margin:0;
+    background:#f5f7fb;
+    color:#1f2937;
+}
+
+
+header{
+
+    background:#fff;
+    padding:18px 30px;
+    border-bottom:1px solid #ddd;
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+}
+
+
+.container{
+
+    max-width:1200px;
+    margin:auto;
+    padding:25px;
+
+}
+
+
+
+.card{
+
+    background:white;
+    border-radius:12px;
+    padding:20px;
+    margin-bottom:20px;
+
+}
+
+
+
+button{
+
+    background:#2563eb;
+    color:white;
+    border:0;
+    border-radius:8px;
+
+    padding:9px 15px;
+
+    cursor:pointer;
+
+}
+
+
+
+input{
+
+    padding:10px;
+
+    border:1px solid #ccc;
+
+    border-radius:8px;
+
+    width:260px;
+
+    margin:5px;
+
+}
+
+
+
+table{
+
+    width:100%;
+
+    border-collapse:collapse;
+
+    background:white;
+
+}
+
+
+th,td{
+
+    padding:12px;
+
+    border-bottom:1px solid #eee;
+
+    text-align:left;
+
+}
+
+
+
+.modal{
+
+    display:none;
+
+    position:fixed;
+
+    inset:0;
+
+    background:rgba(0,0,0,.5);
+
+    padding:30px;
+
+}
+
+
+
+.modal-box{
+
+    background:white;
+
+    max-width:900px;
+
+    margin:auto;
+
+    padding:25px;
+
+    border-radius:12px;
+
+    max-height:90vh;
+
+    overflow:auto;
+
+}
+
+
+
+.grid{
+
+    display:grid;
+
+    grid-template-columns:repeat(4,1fr);
+
+    gap:10px;
+
+}
+
+
+
+.item{
+
+    background:#f8fafc;
+
+    padding:10px;
+
+    border-radius:8px;
+
+}
+
+
+.stat{
+
+    font-size:22px;
+
+    font-weight:bold;
+
+    color:#2563eb;
+
+}
+
+
 </style>
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    
 </head>
+
+
+
 <body>
 
+
+
+<!-- 登录页面 -->
+
 <div id="loginPage" class="container">
+
+
 <div class="card">
+
+
 <h2>实验后台登录</h2>
-<input id="emailInput" placeholder="管理员邮箱"><br>
-<input id="passwordInput" type="password" placeholder="管理员密码"><br>
-<button id="loginButton">登录</button>
+
+
+<input 
+id="emailInput"
+placeholder="管理员账号">
+
+
+<br>
+
+
+<input 
+id="passwordInput"
+type="password"
+placeholder="管理员密码">
+
+
+<br>
+
+
+<button id="loginButton">
+登录
+</button>
+
+
 <p id="loginError"></p>
+
+
 </div>
+
+
 </div>
+
+
+
+
+
+<!-- 后台主页 -->
 
 <div id="adminPage" style="display:none">
+
+
 <header>
-<h2>鼠标随机性实验后台</h2>
-<button id="logoutButton">退出</button>
+
+
+<h2>
+目标选择实验后台管理系统
+</h2>
+
+
+<button id="logoutButton">
+退出
+</button>
+
+
 </header>
 
+
+
+
 <div class="container">
-<div class="card">
-<h3>数据统计</h3>
-<p>总被试数量：<span id="totalCount">0</span></p>
-<p>平均总点击次数：<span id="avgCount">0</span></p>
-</div>
+
+
 
 <div class="card">
-<input id="searchInput" placeholder="搜索 Participant ID">
-<button id="exportButton">导出CSV</button>
+
+
+<h3>
+数据统计
+</h3>
+
+
+<p>
+实验总被试数量：
+<span id="totalCount" class="stat">
+0
+</span>
+</p>
+
+
+<p>
+今日新增被试：
+<span id="todayCount" class="stat">
+0
+</span>
+</p>
+
+
+
 </div>
+
+
+
+
+
+
+<div class="card">
+
+
+<input 
+id="searchInput"
+placeholder="搜索 Participant ID">
+
+
+<button id="searchButton">
+搜索
+</button>
+
+
+<button id="exportButton">
+导出全部数据
+</button>
+
+
+
+</div>
+
+
+
+
+
+
+<div class="card">
+
 
 <table>
+
+
 <thead>
+
+
 <tr>
-<th>Participant ID</th>
-<th>年龄</th>
-<th>性别</th>
-<th>阶段1点击</th>
-<th>阶段2点击</th>
-<th>完成时间</th>
-<th>操作</th>
+
+<th>
+Participant ID
+</th>
+
+
+<th>
+年龄
+</th>
+
+
+<th>
+性别
+</th>
+
+
+<th>
+阶段1点击
+</th>
+
+
+<th>
+阶段2点击
+</th>
+
+
+<th>
+完成时间
+</th>
+
+
+<th>
+操作
+</th>
+
+
 </tr>
+
+
 </thead>
-<tbody id="dataBody"></tbody>
+
+
+
+<tbody id="dataBody">
+
+
+</tbody>
+
+
+
 </table>
+
+
+
 </div>
+
+
+
 </div>
+
+
+
+</div>
+
+
+
+
+
+
+
+<!-- 详情弹窗 -->
+
 
 <div id="detailModal" class="modal">
+
+
 <div class="modal-box">
-<button id="closeButton">关闭</button>
-<div id="detailContent"></div>
+
+
+<button id="closeButton">
+关闭
+</button>
+
+
+
+<div id="detailContent">
+
+
 </div>
+
+
+
 </div>
 
-<script type="module">
-import {initializeApp} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
-import {getAuth,signInWithEmailAndPassword,signOut} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
-import {getFirestore,collection,onSnapshot} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
-const firebaseConfig={
-apiKey:"AIzaSyCjuXIRHuHe31rr3ro8OfqEBJQSqo_Vwzw",
-authDomain:"mouse-randomness-experiment.firebaseapp.com",
-projectId:"mouse-randomness-experiment",
-storageBucket:"mouse-randomness-experiment.firebasestorage.app",
-messagingSenderId:"200186780535",
-appId:"1:200186780535:web:e2fe9cb91015130a3e1f72"
-};
+</div>
 
-const firebaseApp=initializeApp(firebaseConfig);
-const auth=getAuth(firebaseApp);
-const db=getFirestore(firebaseApp);
 
-const loginPage=document.getElementById("loginPage");
-const adminPage=document.getElementById("adminPage");
-const loginButton=document.getElementById("loginButton");
-const loginError=document.getElementById("loginError");
-const logoutButton=document.getElementById("logoutButton");
-const dataBody=document.getElementById("dataBody");
+
+<script>
+const API_URL =
+"https://script.google.com/macros/s/AKfycbxTt7cJxGSr1hRc75sHJ7QeGsRJKjH06MuQtYA6ycKueMsDtu2tVv5kNg3d6c-St6EJ/exec";
+
+
+// ======================
+// 管理员账号密码
+// ======================
+
+const ADMIN_ACCOUNT = "18311495443@163.com";
+const ADMIN_PASSWORD = "Ad13579";
+
+
+// ======================
+// 页面元素
+// ======================
+
+const loginPage =
+document.getElementById("loginPage");
+
+const adminPage =
+document.getElementById("adminPage");
+
+
+const loginButton =
+document.getElementById("loginButton");
+
+
+const loginError =
+document.getElementById("loginError");
+
+
+const logoutButton =
+document.getElementById("logoutButton");
+
+
+const dataBody =
+document.getElementById("dataBody");
+
 
 let experiments=[];
 
-loginButton.addEventListener("click",async()=>{
-    const email=document.getElementById("emailInput").value.trim();
-    const password=document.getElementById("passwordInput").value;
 
-    try{
-        await signInWithEmailAndPassword(auth,email,password);
-        loginPage.style.display="none";
-        adminPage.style.display="block";
-        loadData();
-    }catch(e){
-        console.error(e);
-        loginError.innerText="邮箱或密码错误";
-    }
-});
+// ======================
+// 登录
+// ======================
 
-logoutButton.addEventListener("click",()=>{
-    signOut(auth).then(()=>location.reload());
-});
+loginButton.onclick=function(){
 
-function loadData(){
-    onSnapshot(collection(db,"experiments"),snapshot=>{
-        experiments=[];
-        snapshot.forEach(doc=>{
-            experiments.push({id:doc.id,...doc.data()});
-        });
-        render();
-    });
+
+const account =
+document.getElementById("emailInput")
+.value.trim();
+
+
+const password =
+document.getElementById("passwordInput")
+.value;
+
+
+
+if(
+account===ADMIN_ACCOUNT &&
+password===ADMIN_PASSWORD
+){
+
+
+loginPage.style.display="none";
+
+adminPage.style.display="block";
+
+
+loadData();
+
+
+}
+else{
+
+
+loginError.innerText=
+"账号或密码错误";
+
+
 }
 
-function render(){
-    dataBody.innerHTML="";
-    let totalClicks=0;
 
-    experiments.forEach(item=>{
-        const s1=item.stage1?.clicks?.length||0;
-        const s2=item.stage2?.clicks?.length||0;
-        totalClicks+=s1+s2;
+};
 
-        const tr=document.createElement("tr");
-        tr.innerHTML=`
-        <td>${item.participantId||item.id}</td>
-        <td>${item.personalInformation?.age||""}</td>
-        <td>${item.personalInformation?.gender||""}</td>
-        <td>${s1}</td>
-        <td>${s2}</td>
-        <td>${item.createdAt?.toDate?.()?.toLocaleString()||""}</td>
-        <td><button class="viewBtn">查看</button></td>`;
 
-        tr.querySelector(".viewBtn").onclick=()=>showDetail(item);
-        dataBody.appendChild(tr);
-    });
 
-    document.getElementById("totalCount").innerText=experiments.length;
-    document.getElementById("avgCount").innerText=
-        experiments.length?Math.round(totalClicks/experiments.length):0;
+// ======================
+// 退出
+// ======================
+
+logoutButton.onclick=function(){
+
+location.reload();
+
+};
+
+
+
+// ======================
+// 获取数据
+// ======================
+
+async function loadData(){
+
+
+try{
+
+
+const response =
+await fetch(API_URL);
+
+
+
+experiments =
+await response.json();
+
+
+
+// JSON字符串解析
+
+experiments.forEach(item=>{
+
+
+try{
+
+item.personalInformation =
+JSON.parse(
+item.personalInformation
+);
+
+
+item.stage1 =
+JSON.parse(
+item.stage1
+);
+
+
+item.stage2 =
+JSON.parse(
+item.stage2
+);
+
+
+}catch(e){
+
+console.log(
+"解析失败",
+e
+);
+
 }
+
+
+});
+
+
+
+render();
+
+
+}catch(error){
+
+
+alert(
+"数据读取失败"
+);
+
+
+console.error(error);
+
+
+}
+
+
+}
+
+
+
+
+// ======================
+// 渲染列表
+// ======================
+
+function render(list=experiments){
+
+
+dataBody.innerHTML="";
+
+
+list.forEach(item=>{
+
+
+const stage1 =
+item.stage1?.clicks?.length || 0;
+
+
+const stage2 =
+item.stage2?.clicks?.length || 0;
+
+
+
+const tr =
+document.createElement("tr");
+
+
+
+tr.innerHTML=`
+
+<td>
+${item.participantId}
+</td>
+
+
+<td>
+${item.personalInformation?.age || ""}
+</td>
+
+
+<td>
+${item.personalInformation?.gender || ""}
+</td>
+
+
+<td>
+${stage1}
+</td>
+
+
+<td>
+${stage2}
+</td>
+
+
+<td>
+${item.createdAt || ""}
+</td>
+
+
+<td>
+
+<button class="view">
+查看
+</button>
+
+
+<button class="exportOne">
+导出
+</button>
+
+
+</td>
+
+`;
+
+
+
+
+tr.querySelector(".view")
+.onclick=()=>showDetail(item);
+
+
+
+tr.querySelector(".exportOne")
+.onclick=()=>exportSingle(item);
+
+
+
+dataBody.appendChild(tr);
+
+
+
+});
+
+
+
+// 总数量
+
+document.getElementById("totalCount")
+.innerText=list.length;
+
+
+
+// 今日新增
+
+const today =
+new Date()
+.toLocaleDateString();
+
+
+
+const todayCount =
+experiments.filter(item=>{
+
+
+return new Date(item.createdAt)
+.toLocaleDateString()
+===today;
+
+
+}).length;
+
+
+
+document.getElementById("todayCount")
+.innerText=todayCount;
+
+
+}
+
+
+
+// ======================
+// 搜索
+// ======================
+
+
+document.getElementById("searchButton")
+.onclick=function(){
+
+
+const keyword =
+document.getElementById("searchInput")
+.value.trim();
+
+
+
+if(!keyword){
+
+render();
+
+return;
+
+}
+
+
+
+const result =
+experiments.filter(item=>
+
+item.participantId
+.includes(keyword)
+
+);
+
+
+
+render(result);
+
+
+
+};
+
+
+
+// ======================
+// 查看详情
+// ======================
 
 function showDetail(item){
-    document.getElementById("detailModal").style.display="block";
 
-    document.getElementById("detailContent").innerHTML=`
-    <h2>${item.participantId}</h2>
-    <div class="grid">
-    <div class="item">年龄:${item.personalInformation?.age||""}</div>
-    <div class="item">性别:${item.personalInformation?.gender||""}</div>
-    <div class="item">教育:${item.personalInformation?.education||""}</div>
-    <div class="item">职业:${item.personalInformation?.occupation||""}</div>
-    </div>
-    <h3>阶段1点击序列</h3>
-    <p>${(item.stage1?.clicks||[]).map(x=>x.target).join(" → ")}</p>
-    <h3>阶段2点击序列</h3>
-    <p>${(item.stage2?.clicks||[]).map(x=>x.target).join(" → ")}</p>`;
+
+document.getElementById("detailModal")
+.style.display="block";
+
+
+
+const info =
+item.personalInformation;
+
+
+
+document.getElementById("detailContent")
+.innerHTML=`
+
+<h2>
+${item.participantId}
+</h2>
+
+
+<h3>
+个人信息
+</h3>
+
+
+<div class="grid">
+
+
+<div class="item">
+年龄：
+${info.age}
+</div>
+
+
+<div class="item">
+性别：
+${info.gender}
+</div>
+
+
+<div class="item">
+教育：
+${info.education}
+</div>
+
+
+<div class="item">
+职业：
+${info.occupation}
+</div>
+
+
+<div class="item">
+疲劳：
+${info.fatigue}
+</div>
+
+
+<div class="item">
+精神状态：
+${info.mentalState}
+</div>
+
+
+<div class="item">
+压力：
+${info.stress}
+</div>
+
+
+<div class="item">
+惯用手：
+${info.handedness}
+</div>
+
+
+</div>
+
+
+
+<h3>
+阶段1点击序列
+</h3>
+
+
+<p>
+${
+item.stage1.clicks
+.map(x=>x.target)
+.join(" → ")
+}
+</p>
+
+
+
+<h3>
+阶段2点击序列
+</h3>
+
+
+<p>
+${
+item.stage2.clicks
+.map(x=>x.target)
+.join(" → ")
+}
+</p>
+
+
+`;
+
 }
 
-document.getElementById("closeButton").onclick=()=>{
-    document.getElementById("detailModal").style.display="none";
+
+
+
+document.getElementById("closeButton")
+.onclick=function(){
+
+document.getElementById("detailModal")
+.style.display="none";
+
 };
 
-document.getElementById("exportButton").onclick=()=>{
-    let csv="Participant ID,Age,Gender,Stage1,Stage2\n";
-    experiments.forEach(x=>{
-        csv+=`${x.participantId},${x.personalInformation?.age||""},${x.personalInformation?.gender||""},${x.stage1?.clicks?.length||0},${x.stage2?.clicks?.length||0}\n`;
-    });
-    const blob=new Blob([csv],{type:"text/csv;charset=utf-8"});
-    const a=document.createElement("a");
-    a.href=URL.createObjectURL(blob);
-    a.download="experiment_data.csv";
-    a.click();
+
+
+
+
+// ======================
+// 导出全部 Excel
+// ======================
+
+
+document.getElementById("exportButton")
+.onclick=function(){
+
+
+exportExcel(experiments);
+
+
 };
+
+
+
+
+
+// ======================
+// 导出单个
+// ======================
+
+
+function exportSingle(item){
+
+
+exportExcel(
+[item],
+item.participantId
+);
+
+
+}
+
+
+
+// ======================
+// Excel生成
+// ======================
+
+function exportExcel(data,name="实验数据"){
+
+
+let infoCSV =
+"Participant ID,年龄,性别,教育程度,职业,疲劳,精神状态,压力,惯用手,完成时间\n";
+
+
+
+let clickCSV =
+"Participant ID,阶段,序号,目标点,时间戳,阶段时间,间隔时间\n";
+
+
+
+
+data.forEach(item=>{
+
+
+const info =
+item.personalInformation;
+
+
+
+infoCSV +=
+`${item.participantId},
+${info.age},
+${info.gender},
+${info.education},
+${info.occupation},
+${info.fatigue},
+${info.mentalState},
+${info.stress},
+${info.handedness},
+${item.createdAt}\n`;
+
+
+
+
+
+[item.stage1,item.stage2]
+.forEach((stage,index)=>{
+
+
+stage.clicks.forEach(click=>{
+
+
+clickCSV +=
+`${item.participantId},
+${index+1},
+${click.sequence},
+${click.target},
+${click.timestamp},
+${click.elapsed_s},
+${click.interval_s||""}\n`;
+
+
+
+});
+
+
+});
+
+
+});
+
+
+
+
+// 生成xlsx需要SheetJS
+
+const wb =
+XLSX.utils.book_new();
+
+
+
+const ws1 =
+XLSX.utils.csv_to_sheet(infoCSV);
+
+
+const ws2 =
+XLSX.utils.csv_to_sheet(clickCSV);
+
+
+
+XLSX.utils.book_append_sheet(
+wb,
+ws1,
+"Participant_Info"
+);
+
+
+
+XLSX.utils.book_append_sheet(
+wb,
+ws2,
+"Click_Data"
+);
+
+
+
+XLSX.writeFile(
+wb,
+name+".xlsx"
+);
+
+
+}
+    
 </script>
+
+
+
 </body>
+
 </html>
