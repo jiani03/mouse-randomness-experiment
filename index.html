@@ -106,20 +106,8 @@
   </div>
 
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
-import { getFirestore, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+    // 已切换到 Google Sheet 上传，不再使用 Firebase
 
-    // 保留原 Firebase 项目配置。
-    const firebaseConfig = {
-      apiKey: "AIzaSyCjuXIRHuHe31rr3ro8OfqEBJQSqo_Vwzw",
-      authDomain: "mouse-randomness-experiment.firebaseapp.com",
-      projectId: "mouse-randomness-experiment",
-      storageBucket: "mouse-randomness-experiment.firebasestorage.app",
-      messagingSenderId: "200186780535",
-      appId: "1:200186780535:web:e2fe9cb91015130a3e1f72"
-    };
-    const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
     const $ = id => document.getElementById(id);
     const screens = ["intro", "formScreen", "stagePrompt", "countdownScreen", "experiment", "rest", "finish"];
     const STAGE_MS = 10000;
@@ -280,43 +268,53 @@ const db = getFirestore(app);
       if (stageNumber === 1) show("rest");
       else { show("finish"); uploadData(); }
     }
-    async function uploadData() {
-      $("retryUpload").hidden = true;
-      $("finishTitle").textContent = "实验结束";
-      $("finishMessage").className = "";
-      $("finishMessage").textContent = "正在上传数据，请保持页面打开……";
-      try {
+async function uploadData() {
 
-  await Promise.race([
-  setDoc(doc(db, "experiments", data.participantId), {
-    participantId: data.participantId,
-    personalInformation: data.personalInformation,
-    stage1: data.stage1,
-    stage2: data.stage2,
-    bpm: 120,
-    meter: "4/4",
-    targetCount: 5,
-    createdAt: serverTimestamp()
-  }),
-  new Promise((_, reject) =>
-    setTimeout(() => reject(new Error("上传超时")), 10000)
-  )
-]);
-        $("finishTitle").textContent = "实验完成";
-        $("finishMessage").className = "success";
-        $("finishMessage").textContent = "数据已上传，感谢参与。您现在可以退出页面。";
-      } catch (error) {
-        console.error("数据上传失败：", error);
-alert(
-  "错误代码：" + error.code +
-  "\n错误信息：" + error.message
-);
-        $("finishTitle").textContent = "上传未完成";
-        $("finishMessage").className = "error";
-        $("finishMessage").textContent = "数据上传失败，请保持页面打开并点击“重新上传”。如仍失败，请联系实验人员。";
-        $("retryUpload").hidden = false;
-      }
-    }
+  $("retryUpload").hidden = true;
+  $("finishTitle").textContent = "实验结束";
+  $("finishMessage").className = "";
+  $("finishMessage").textContent = "正在上传数据，请保持页面打开……";
+
+
+  const scriptURL = "https://script.google.com/macros/s/AKfycbxTt7cJxGSr1hRc75sHJ7QeGsRJKjH06MuQtYA6ycKueMsDtu2tVv5kNg3d6c-St6EJ/exec";
+
+
+  try {
+
+    await fetch(scriptURL, {
+      method: "POST",
+      body: JSON.stringify({
+        participantId: data.participantId,
+        personalInformation: data.personalInformation,
+        stage1: data.stage1,
+        stage2: data.stage2,
+        bpm: 120,
+        meter: "4/4",
+        targetCount: 5
+      })
+    });
+
+
+    $("finishTitle").textContent = "实验完成";
+    $("finishMessage").className = "success";
+    $("finishMessage").textContent =
+      "数据已上传，感谢参与。您现在可以退出页面。";
+
+
+  } catch(error) {
+
+    console.error(error);
+
+    $("finishTitle").textContent = "上传未完成";
+    $("finishMessage").className = "error";
+    $("finishMessage").textContent =
+      "数据上传失败，请重新尝试。";
+
+    $("retryUpload").hidden = false;
+
+  }
+
+}
 
     $("toForm").addEventListener("click", () => show("formScreen"));
     $("infoForm").addEventListener("submit", event => {
