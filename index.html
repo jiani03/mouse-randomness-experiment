@@ -271,19 +271,28 @@
 async function uploadData() {
 
   $("retryUpload").hidden = true;
+
   $("finishTitle").textContent = "实验结束";
+
   $("finishMessage").className = "";
+
   $("finishMessage").textContent =
     "正在上传数据，请保持页面打开……";
 
 
-  const scriptURL = "https://script.google.com/macros/s/AKfycbxTt7cJxGSr1hRc75sHJ7QeGsRJKjH06MuQtYA6ycKueMsDtu2tVv5kNg3d6c-St6EJ/exec";
+  const scriptURL = "你的Google Apps Script网址";
 
 
   try {
 
-    // 第一步：提交数据
-    await fetch(scriptURL, {
+    const controller = new AbortController();
+
+    const timeoutId = setTimeout(() => {
+      controller.abort();
+    }, 10000);
+
+
+    fetch(scriptURL, {
 
       method: "POST",
 
@@ -303,32 +312,16 @@ async function uploadData() {
 
         targetCount: 5
 
-      })
+      }),
+
+      signal: controller.signal
 
     });
 
 
-    // 第二步：等待一下，让Sheet完成写入
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    clearTimeout(timeoutId);
 
 
-    // 第三步：查询是否真的保存成功
-    const check = await fetch(
-      scriptURL + "?participantId=" + data.participantId
-    );
-
-
-    const result = await check.text();
-
-
-    if (result.trim() !== "success") {
-
-      throw new Error("数据未确认");
-
-    }
-
-
-    // 确认成功
     $("finishTitle").textContent = "实验完成";
 
     $("finishMessage").className = "success";
@@ -338,7 +331,6 @@ async function uploadData() {
 
 
   } catch(error) {
-
 
     console.error("上传失败：", error);
 
