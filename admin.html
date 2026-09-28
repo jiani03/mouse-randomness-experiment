@@ -877,6 +877,10 @@ ${info.stress}
 ${info.handedness}
 </div>
 
+<div class="item">
+MBTI：
+${info.mbti || ""}
+</div>
 
 </div>
 
@@ -984,6 +988,7 @@ let infoData = [
 "精神状态",
 "压力",
 "惯用手",
+"MBTI",    
 "实验开始时间",
 "实验完成时间"
 ]
@@ -1030,6 +1035,8 @@ info.mentalState || "",
 info.stress || "",
 
 info.handedness || "",
+
+info.mbti || "",
 
 formatTime(item.stage1.startedAt),
 
