@@ -75,6 +75,10 @@
           <div class="field"><label for="mentalState">当前精神状态</label><select id="mentalState" required><option value="">请选择</option><option value="1">1 — 很差</option><option value="2">2 — 较差</option><option value="3">3 — 一般</option><option value="4">4 — 较好</option><option value="5">5 — 很好</option></select></div>
           <div class="field"><label for="stress">当前压力水平</label><select id="stress" required><option value="">请选择</option><option value="1">1 — 几乎没有</option><option value="2">2 — 较低</option><option value="3">3 — 一般</option><option value="4">4 — 较高</option><option value="5">5 — 非常高</option></select></div>
           <div class="field"><label for="handedness">惯用手</label><select id="handedness" required><option value="">请选择</option><option>右手</option><option>左手</option><option>双手均可</option></select></div>
+          <div class="field">
+  <label for="mbti">MBTI（选填）</label>
+  <input id="mbti" type="text" maxlength="4" placeholder="不知道可不填">
+</div>
         </div>
         <div class="actions"><button class="primary" type="submit">提交并继续</button></div>
       </form>
@@ -108,6 +112,12 @@
       <h2 id="finishTitle">实验结束</h2>
       <p id="finishMessage" role="status">正在上传数据，请保持页面打开……</p>
       <p id="finishId" class="participant-id"></p>
+      
+        <div id="scoreBox" hidden>
+    <p><strong>Stage 1 随机性得分：<span id="stage1Score">—</span> 分</strong></p>
+    <p><strong>Stage 2 随机性得分：<span id="stage2Score">—</span> 分</strong></p>
+  </div>
+      
       <div class="actions"><button id="retryUpload" class="secondary" type="button" hidden>重新上传</button></div>
     </section>
   </div>
@@ -120,7 +130,7 @@
     const STAGE_MS = 360000;
 const prompts = {
   1: "请按照您平时的操作习惯完成目标选择。页面将显示多个目标点，请根据节拍器声音提供的节奏参考进行操作，每次操作请选择并点击一个目标点。",
-  2: "请尝试避免重复使用相同的选择方式完成目标选择。页面将显示多个目标点，请根据节拍器声音提供的节奏参考进行操作，每次操作请选择并点击一个目标点。"
+  2: "请尽可能随机地选择目标。页面将显示多个目标点，请根据节拍器声音提供的节奏参考进行操作，每次操作请选择并点击一个目标点。"
 };
     // 原坐标按 1000×600 的基准区域转换为相对中心的像素偏移，整体等比缩放。
     const points = [
@@ -153,13 +163,14 @@ const prompts = {
       return "P-" + Array.from(bytes, b => b.toString(16).padStart(2, "0")).join("");
     }
     function readInformation() {
-      return {
-        age: Number($("age").value), gender: $("gender").value,
-        education: $("education").value, occupation: $("occupation").value,
-        fatigue: Number($("fatigue").value), mentalState: Number($("mentalState").value),
-        stress: Number($("stress").value), handedness: $("handedness").value
-      };
-    }
+  return {
+    age: Number($("age").value), gender: $("gender").value,
+    education: $("education").value, occupation: $("occupation").value,
+    fatigue: Number($("fatigue").value), mentalState: Number($("mentalState").value),
+    stress: Number($("stress").value), handedness: $("handedness").value,
+    mbti: $("mbti").value.trim()
+  };
+}
     function showStagePrompt() {
       $("promptTitle").textContent = `阶段 ${stageNumber}`;
       $("promptText").textContent = prompts[stageNumber];
@@ -254,6 +265,32 @@ const prompts = {
       beatTimer = setInterval(playBeat, 500);
       timer = setInterval(updateTime, 100);
     }
+    function calculateRandomnessScore(clicks) {
+  if (!clicks || clicks.length === 0) return 0;
+
+  const counts = [0, 0, 0, 0, 0];
+
+  clicks.forEach(click => {
+    const target = Number(click.target);
+    if (target >= 1 && target <= 5) {
+      counts[target - 1]++;
+    }
+  });
+
+  const total = clicks.length;
+  let H = 0;
+
+  counts.forEach(count => {
+    if (count > 0) {
+      const P = count / total;
+      H -= P * Math.log2(P);
+    }
+  });
+
+  const R = H / Math.log2(5);
+
+  return Math.round(R * 100);
+}
     function endStage() {
       if (!running || ending) return;
       ending = true;
@@ -272,6 +309,14 @@ const prompts = {
         clicks
       };
       data[`stage${stageNumber}`] = result;
+      const score = calculateRandomnessScore(clicks);
+
+if (stageNumber === 1) {
+  $("stage1Score").textContent = score;
+} else {
+  $("stage2Score").textContent = score;
+  $("scoreBox").hidden = false;
+}
       if (stageNumber === 1) show("rest");
       else { show("finish"); uploadData(); }
     }
