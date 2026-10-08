@@ -56,7 +56,7 @@
 
   <p>开始实验前，请确认设备媒体音量已开启，并关闭静音模式，以确保能够正常听到节拍器声音。</p>
 
-  <p>实验过程中请保持页面打开，尽量不要切换应用或锁定屏幕。</p>
+  <p><strong>注意：实验过程中请勿切换应用、锁定屏幕或离开实验页面，否则当前阶段将中断并需重新开始。</strong></p>
 
   <p class="muted">本实验不采集姓名。填写的基本信息和操作数据仅用于后续分析。</p>
       <div class="actions"><button id="toForm" class="primary" type="button">继续</button></div>
@@ -102,6 +102,17 @@
       <div class="status-note">请根据提示选择目标点</div>
     </section>
 
+    <section id="interrupted" class="screen card" hidden>
+  <h2>实验中断</h2>
+  <p>检测到您离开了实验页面或锁定了屏幕，本阶段实验已作废。</p>
+  <p>请返回后点击下方按钮，重新完成本阶段。</p>
+  <div class="actions">
+    <button id="restartStage" class="primary" type="button">
+      重新开始本阶段
+    </button>
+  </div>
+</section>
+    
     <section id="rest" class="screen card" hidden>
       <h2>阶段结束</h2>
       <p>您可以短暂休息。准备完成后，请进入下一阶段。</p>
@@ -126,7 +137,7 @@
     // 已切换到 Google Sheet 上传，不再使用 Firebase
 
     const $ = id => document.getElementById(id);
-    const screens = ["intro", "formScreen", "stagePrompt", "countdownScreen", "experiment", "rest", "finish"];
+    const screens = ["intro", "formScreen", "stagePrompt", "countdownScreen", "experiment", "interrupted", "rest", "finish"];
     const STAGE_MS = 360000;
 const prompts = {
   1: "请按照您平时的操作习惯完成目标选择。页面将显示多个目标点，请根据节拍器声音提供的节奏参考进行操作，每次操作请选择并点击一个目标点。",
@@ -423,8 +434,39 @@ async function uploadData() {
       }, 1000);
     });
     $("toStage2").addEventListener("click", () => { stageNumber = 2; showStagePrompt(); });
+    
+    $("restartStage").addEventListener("click", () => {
+  ending = false;
+  show("stagePrompt");
+});
+    
     $("retryUpload").addEventListener("click", uploadData);
     window.addEventListener("resize", () => { if (running) placeTargets(); });
+    document.addEventListener("visibilitychange", () => {
+  if (document.hidden && running) {
+    interruptStage();
+  }
+});
+    function interruptStage() {
+  if (!running || ending) return;
+
+  ending = true;
+  running = false;
+
+  clearInterval(timer);
+  clearInterval(beatTimer);
+  timer = null;
+  beatTimer = null;
+
+  $("stage").replaceChildren();
+
+  // 当前阶段数据作废
+  clicks = [];
+  previousClickMono = null;
+  sequence = 0;
+
+  show("interrupted");
+}
     window.addEventListener("beforeunload", event => {
       if (!running && !data.stage1 && !data.stage2) return;
       if ($("finishMessage").classList.contains("success")) return;
