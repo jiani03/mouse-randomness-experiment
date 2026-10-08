@@ -187,12 +187,38 @@ const prompts = {
       $("promptText").textContent = prompts[stageNumber];
       show("stagePrompt");
     }
-    function unlockAudio() {
-      const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-      if (!AudioContextClass) return;
-      if (!audioContext) audioContext = new AudioContextClass();
-      if (audioContext.state === "suspended") audioContext.resume().catch(console.warn);
+    async function unlockAudio() {
+  const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+  if (!AudioContextClass) return;
+
+  try {
+    // 如果原来的 AudioContext 已经失效或关闭，重新创建
+    if (!audioContext || audioContext.state === "closed") {
+      audioContext = new AudioContextClass();
     }
+
+    // 重新激活音频
+    if (audioContext.state !== "running") {
+      await audioContext.resume();
+    }
+
+    // 主动播放一个极短、几乎听不到的声音，
+    // 帮助手机浏览器确认这是用户主动点击后触发的音频
+    const now = audioContext.currentTime;
+    const oscillator = audioContext.createOscillator();
+    const gain = audioContext.createGain();
+
+    oscillator.frequency.value = 440;
+    gain.gain.setValueAtTime(0.00001, now);
+
+    oscillator.connect(gain).connect(audioContext.destination);
+    oscillator.start(now);
+    oscillator.stop(now + 0.01);
+
+  } catch (error) {
+    console.warn("音频重新激活失败：", error);
+  }
+}
     function playBeat() {
       if (!running) return;
       const strong = beatIndex % 4 === 0;
@@ -422,17 +448,24 @@ async function uploadData() {
       stageNumber = 1;
       showStagePrompt();
     });
-    $("startStage").addEventListener("click", () => {
-      unlockAudio();
-      show("countdownScreen");
-      let number = 3;
+   $("startStage").addEventListener("click", async () => {
+  await unlockAudio();
+  show("countdownScreen");
+
+  let number = 3;
+  $("countdownNumber").textContent = String(number);
+
+  const countdownTimer = setInterval(() => {
+    number--;
+
+    if (number > 0) {
       $("countdownNumber").textContent = String(number);
-      const countdownTimer = setInterval(() => {
-        number--;
-        if (number > 0) $("countdownNumber").textContent = String(number);
-        else { clearInterval(countdownTimer); beginStage(); }
-      }, 1000);
-    });
+    } else {
+      clearInterval(countdownTimer);
+      beginStage();
+    }
+  }, 1000);
+});
     $("toStage2").addEventListener("click", () => { stageNumber = 2; showStagePrompt(); });
     
     $("restartStage").addEventListener("click", () => {
