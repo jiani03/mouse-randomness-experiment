@@ -382,31 +382,28 @@ async function uploadData() {
     }, 10000);
 
 
-    fetch(scriptURL, {
+   const response = await fetch(scriptURL, {
+  method: "POST",
+  body: JSON.stringify({
+    participantId: data.participantId,
+    personalInformation: data.personalInformation,
+    stage1: data.stage1,
+    stage2: data.stage2,
+    bpm: 120,
+    meter: "4/4",
+    targetCount: 5
+  }),
+  signal: controller.signal
+});
 
-      method: "POST",
+clearTimeout(timeoutId);
 
-      body: JSON.stringify({
+if (!response.ok) {
+  throw new Error("HTTP status: " + response.status);
+}
 
-        participantId: data.participantId,
-
-        personalInformation: data.personalInformation,
-
-        stage1: data.stage1,
-
-        stage2: data.stage2,
-
-        bpm: 120,
-
-        meter: "4/4",
-
-        targetCount: 5
-
-      }),
-
-      signal: controller.signal
-
-    });
+const result = await response.text();
+console.log("服务器响应：", result);
 
 
     clearTimeout(timeoutId);
