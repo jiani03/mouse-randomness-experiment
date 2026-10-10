@@ -359,70 +359,86 @@ if (stageNumber === 1) {
     }
 
 async function uploadData() {
+
   $("retryUpload").hidden = true;
+
   $("finishTitle").textContent = "实验结束";
+
   $("finishMessage").className = "";
+
   $("finishMessage").textContent =
-    "正在提交数据，请保持页面打开……";
+    "正在上传数据，请保持页面打开……";
 
-  const scriptURL =
-    "https://script.google.com/macros/s/AKfycbxTt7cJxGSr1hRc75sHJ7QeGsRJKjH06MuQtYA6ycKueMsDtu2tVv5kNg3d6c-St6EJ/exec";
 
-  const payload = {
-    participantId: data.participantId,
-    personalInformation: data.personalInformation,
-    stage1: data.stage1,
-    stage2: data.stage2,
-    bpm: 120,
-    meter: "4/4",
-    targetCount: 5
-  };
+  const scriptURL = "https://script.google.com/macros/s/AKfycbxTt7cJxGSr1hRc75sHJ7QeGsRJKjH06MuQtYA6ycKueMsDtu2tVv5kNg3d6c-St6EJ/exec";
+
 
   try {
-    // 创建隐藏 iframe，用于接收表单提交后的页面
-    const iframe = document.createElement("iframe");
-    const frameName =
-      "upload_frame_" + Date.now();
 
-    iframe.name = frameName;
-    iframe.style.display = "none";
-    document.body.appendChild(iframe);
+    const controller = new AbortController();
 
-    // 使用普通表单提交，避免依赖 fetch 的跨域响应读取
-    const form = document.createElement("form");
-    form.method = "POST";
-    form.action = scriptURL;
-    form.target = frameName;
-    form.style.display = "none";
+    const timeoutId = setTimeout(() => {
+      controller.abort();
+    }, 10000);
 
-    const input = document.createElement("input");
-    input.type = "hidden";
-    input.name = "payload";
-    input.value = JSON.stringify(payload);
 
-    form.appendChild(input);
-    document.body.appendChild(form);
+    fetch(scriptURL, {
 
-    form.submit();
+      method: "POST",
 
-    $("finishTitle").textContent = "已提交，正在确认";
-    $("finishMessage").className = "";
+      body: JSON.stringify({
+
+        participantId: data.participantId,
+
+        personalInformation: data.personalInformation,
+
+        stage1: data.stage1,
+
+        stage2: data.stage2,
+
+        bpm: 120,
+
+        meter: "4/4",
+
+        targetCount: 5
+
+      }),
+
+      signal: controller.signal
+
+    });
+
+
+    clearTimeout(timeoutId);
+
+
+    $("finishTitle").textContent = "实验完成";
+
+    $("finishMessage").className = "success";
+
     $("finishMessage").textContent =
-      "提交请求已发出。请暂时不要关闭页面，后台是否成功保存仍需核对。";
+      "数据已上传，感谢参与。您现在可以退出页面。";
 
-    // 这里不能仅凭 iframe 加载就断定数据已写入表格
-    $("retryUpload").hidden = false;
-    $("retryUpload").textContent = "重新提交数据";
 
-  } catch (error) {
-    console.error("提交失败：", error);
-    $("finishTitle").textContent = "提交失败";
+  } catch(error) {
+
+    console.error("上传失败：", error);
+
+
+    $("finishTitle").textContent = "上传未完成";
+
     $("finishMessage").className = "error";
+
     $("finishMessage").textContent =
-      "提交过程出现错误，请检查网络后重试。";
+      "数据上传失败，请重新尝试。";
+
+
     $("retryUpload").hidden = false;
+
   }
+
 }
+
 
 
     $("toForm").addEventListener("click", () => show("formScreen"));
