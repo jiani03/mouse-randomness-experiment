@@ -431,7 +431,7 @@ Participant ID
 
 <script>
 const API_URL =
-"https://script.google.com/macros/s/AKfycbxTt7cJxGSr1hRc75sHJ7QeGsRJKjH06MuQtYA6ycKueMsDtu2tVv5kNg3d6c-St6EJ/exec";
+"https://randomness-d1gn1cyiya07ceb23-1504802266.ap-shanghai.app.tcloudbase.com/getExperimentData";
 
 
 // ======================
@@ -536,77 +536,42 @@ location.reload();
 // ======================
 
 async function loadData(){
+    try {
+        const response = await fetch(API_URL);
 
+        if (!response.ok) {
+            throw new Error("HTTP 请求失败：" + response.status);
+        }
 
-try{
+        const result = await response.json();
 
+        if (!Array.isArray(result)) {
+            throw new Error(result?.message || "接口返回的数据不是数组");
+        }
 
-const response =
-await fetch(API_URL);
+        // 兼容 CloudBase 对象格式和原来的 JSON 字符串格式
+        const parseIfString = value => {
+            if (typeof value !== "string") return value ?? {};
+            try {
+                return JSON.parse(value);
+            } catch (e) {
+                console.warn("字段 JSON 解析失败：", e);
+                return {};
+            }
+        };
 
+        experiments = result.map(item => ({
+            ...item,
+            personalInformation: parseIfString(item.personalInformation),
+            stage1: parseIfString(item.stage1),
+            stage2: parseIfString(item.stage2)
+        }));
 
-
-experiments =
-await response.json();
-
-
-
-// JSON字符串解析
-
-experiments.forEach(item=>{
-
-
-try{
-
-item.personalInformation =
-JSON.parse(
-item.personalInformation
-);
-
-
-item.stage1 =
-JSON.parse(
-item.stage1
-);
-
-
-item.stage2 =
-JSON.parse(
-item.stage2
-);
-
-
-}catch(e){
-
-console.log(
-"解析失败",
-e
-);
-
-}
-
-
-});
-
-
-
-render();
-
-
-}catch(error){
-
-
-alert(
-"数据读取失败"
-);
-
-
-console.error(error);
-
-
-}
-
-
+        render();
+    } catch (error) {
+        console.error("数据读取失败：", error);
+        alert("数据读取失败，请检查 CloudBase 接口地址、路由及云函数日志。");
+    }
 }
 
 
