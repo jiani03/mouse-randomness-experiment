@@ -1,1151 +1,696 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-
 <head>
-
 <meta charset="UTF-8">
-
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-
 <title>目标选择实验后台</title>
 
-
 <style>
-
-body{
-    font-family:"Microsoft YaHei",Arial;
-    margin:0;
-    background:#f5f7fb;
-    color:#1f2937;
+body {
+    font-family: "Microsoft YaHei", Arial;
+    margin: 0;
+    background: #f5f7fb;
+    color: #1f2937;
 }
-
-
-header{
-
-    background:#fff;
-    padding:18px 30px;
-    border-bottom:1px solid #ddd;
-
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-
+header {
+    background: #fff;
+    padding: 18px 30px;
+    border-bottom: 1px solid #ddd;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
-
-
-.container{
-
-    max-width:1200px;
-    margin:auto;
-    padding:25px;
-
+.container {
+    max-width: 1200px;
+    margin: auto;
+    padding: 25px;
 }
-
-
-
-.card{
-
-    background:white;
-    border-radius:12px;
-    padding:20px;
-    margin-bottom:20px;
-
+.card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
 }
-
-
-
-button{
-
-    background:#2563eb;
-    color:white;
-    border:0;
-    border-radius:8px;
-
-    padding:9px 15px;
-
-    cursor:pointer;
-
+button {
+    background: #2563eb;
+    color: white;
+    border: 0;
+    border-radius: 8px;
+    padding: 9px 15px;
+    cursor: pointer;
+    margin: 3px;
 }
-
-
-
-input{
-
-    padding:10px;
-
-    border:1px solid #ccc;
-
-    border-radius:8px;
-
-    width:260px;
-
-    margin:5px;
-
+button:disabled {
+    opacity: 0.6;
+    cursor: wait;
 }
-
-
-
-table{
-
-    width:100%;
-
-    border-collapse:collapse;
-
-    background:white;
-
+input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    width: 260px;
+    margin: 5px;
+    box-sizing: border-box;
 }
-
-
-th,td{
-
-    padding:12px;
-
-    border-bottom:1px solid #eee;
-
-    text-align:left;
-
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
 }
-
-
-
-.modal{
-
-    display:none;
-
-    position:fixed;
-
-    inset:0;
-
-    background:rgba(0,0,0,.5);
-
-    padding:30px;
-
+th, td {
+    padding: 12px;
+    border-bottom: 1px solid #eee;
+    text-align: left;
 }
-
-
-
-.modal-box{
-
-    background:white;
-
-    max-width:900px;
-
-    margin:auto;
-
-    padding:25px;
-
-    border-radius:12px;
-
-    max-height:90vh;
-
-    overflow:auto;
-
+.modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.5);
+    padding: 30px;
+    overflow: auto;
+    z-index: 10;
 }
-
-
-
-.grid{
-
-    display:grid;
-
-    grid-template-columns:repeat(4,1fr);
-
-    gap:10px;
-
+.modal-box {
+    background: white;
+    max-width: 900px;
+    margin: auto;
+    padding: 25px;
+    border-radius: 12px;
+    max-height: 90vh;
+    overflow: auto;
 }
-
-
-
-.item{
-
-    background:#f8fafc;
-
-    padding:10px;
-
-    border-radius:8px;
-
+.grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
 }
-
-
-.stat{
-
-    font-size:22px;
-
-    font-weight:bold;
-
-    color:#2563eb;
-
+.item {
+    background: #f8fafc;
+    padding: 10px;
+    border-radius: 8px;
+    overflow-wrap: anywhere;
 }
-
-
+.stat {
+    font-size: 22px;
+    font-weight: bold;
+    color: #2563eb;
+}
+.table-wrap {
+    overflow-x: auto;
+}
+#statusMessage {
+    color: #4b5563;
+    margin-top: 10px;
+}
+@media (max-width: 700px) {
+    .container { padding: 12px; }
+    header { padding: 12px; }
+    .grid { grid-template-columns: repeat(2, 1fr); }
+    input { max-width: 100%; }
+    th, td { padding: 8px; }
+}
 </style>
-    
+
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-    
 </head>
-
-
 
 <body>
 
-
-
 <!-- 登录页面 -->
-
 <div id="loginPage" class="container">
-
-
-<div class="card">
-
-
-<h2>实验后台登录</h2>
-
-
-<input 
-id="emailInput"
-placeholder="管理员账号">
-
-
-<br>
-
-
-<input 
-id="passwordInput"
-type="password"
-placeholder="管理员密码">
-
-
-<br>
-
-
-<button id="loginButton">
-登录
-</button>
-
-
-<p id="loginError"></p>
-
-
+    <div class="card">
+        <h2>实验后台登录</h2>
+        <input id="emailInput" placeholder="管理员账号">
+        <br>
+        <input id="passwordInput" type="password" placeholder="管理员密码">
+        <br>
+        <button id="loginButton">登录</button>
+        <p id="loginError"></p>
+    </div>
 </div>
-
-
-</div>
-
-
-
-
 
 <!-- 后台主页 -->
-
 <div id="adminPage" style="display:none">
+    <header>
+        <h2>目标选择实验后台管理系统</h2>
+        <button id="logoutButton">退出</button>
+    </header>
 
+    <div class="container">
+        <div class="card">
+            <h3>数据统计</h3>
+            <p>
+                实验总被试数量：
+                <span id="totalCount" class="stat">0</span>
+            </p>
+            <p>
+                今日新增被试：
+                <span id="todayCount" class="stat">0</span>
+            </p>
+            <p id="statusMessage">等待读取数据</p>
+        </div>
 
-<header>
+        <div class="card">
+            <input id="searchInput" placeholder="搜索 Participant ID">
+            <button id="searchButton">搜索</button>
+            <button id="resetSearchButton">显示全部</button>
+            <button id="exportButton">导出全部数据</button>
+        </div>
 
-
-<h2>
-目标选择实验后台管理系统
-</h2>
-
-
-<button id="logoutButton">
-退出
-</button>
-
-
-</header>
-
-
-
-
-<div class="container">
-
-
-
-<div class="card">
-
-
-<h3>
-数据统计
-</h3>
-
-
-<p>
-实验总被试数量：
-<span id="totalCount" class="stat">
-0
-</span>
-</p>
-
-
-<p>
-今日新增被试：
-<span id="todayCount" class="stat">
-0
-</span>
-</p>
-
-
-
+        <div class="card">
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Participant ID</th>
+                            <th>年龄</th>
+                            <th>性别</th>
+                            <th>阶段1点击</th>
+                            <th>阶段2点击</th>
+                            <th>完成时间</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="dataBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </div>
-
-
-
-
-
-
-<div class="card">
-
-
-<input 
-id="searchInput"
-placeholder="搜索 Participant ID">
-
-
-<button id="searchButton">
-搜索
-</button>
-
-
-<button id="exportButton">
-导出全部数据
-</button>
-
-
-
-</div>
-
-
-
-
-
-
-<div class="card">
-
-
-<table>
-
-
-<thead>
-
-
-<tr>
-
-<th>
-Participant ID
-</th>
-
-
-<th>
-年龄
-</th>
-
-
-<th>
-性别
-</th>
-
-
-<th>
-阶段1点击
-</th>
-
-
-<th>
-阶段2点击
-</th>
-
-
-<th>
-完成时间
-</th>
-
-
-<th>
-操作
-</th>
-
-
-</tr>
-
-
-</thead>
-
-
-
-<tbody id="dataBody">
-
-
-</tbody>
-
-
-
-</table>
-
-
-
-</div>
-
-
-
-</div>
-
-
-
-</div>
-
-
-
-
-
-
 
 <!-- 详情弹窗 -->
-
-
 <div id="detailModal" class="modal">
-
-
-<div class="modal-box">
-
-
-<button id="closeButton">
-关闭
-</button>
-
-
-
-<div id="detailContent">
-
-
+    <div class="modal-box">
+        <button id="closeButton">关闭</button>
+        <div id="detailContent"></div>
+    </div>
 </div>
-
-
-
-</div>
-
-
-</div>
-
-
 
 <script>
 const API_URL =
 "https://randomness-d1gn1cyiya07ceb23-1504802266.ap-shanghai.app.tcloudbase.com/getExperimentData";
 
-
-// ======================
-// 管理员账号密码
-// ======================
-
+// 管理员账号密码：沿用原来的设置
 const ADMIN_ACCOUNT = "18311495443@163.com";
 const ADMIN_PASSWORD = "Ad13579";
 
+const loginPage = document.getElementById("loginPage");
+const adminPage = document.getElementById("adminPage");
+const loginButton = document.getElementById("loginButton");
+const loginError = document.getElementById("loginError");
+const logoutButton = document.getElementById("logoutButton");
+const dataBody = document.getElementById("dataBody");
+const statusMessage = document.getElementById("statusMessage");
 
-// ======================
-// 页面元素
-// ======================
+let experiments = [];
+let displayedExperiments = [];
 
-const loginPage =
-document.getElementById("loginPage");
+loginButton.onclick = async function() {
+    const account = document.getElementById("emailInput").value.trim();
+    const password = document.getElementById("passwordInput").value;
 
-const adminPage =
-document.getElementById("adminPage");
+    if (account !== ADMIN_ACCOUNT || password !== ADMIN_PASSWORD) {
+        loginError.innerText = "账号或密码错误";
+        return;
+    }
 
+    loginError.innerText = "";
+    loginPage.style.display = "none";
+    adminPage.style.display = "block";
 
-const loginButton =
-document.getElementById("loginButton");
-
-
-const loginError =
-document.getElementById("loginError");
-
-
-const logoutButton =
-document.getElementById("logoutButton");
-
-
-const dataBody =
-document.getElementById("dataBody");
-
-
-let experiments=[];
-
-
-// ======================
-// 登录
-// ======================
-
-loginButton.onclick=function(){
-
-
-const account =
-document.getElementById("emailInput")
-.value.trim();
-
-
-const password =
-document.getElementById("passwordInput")
-.value;
-
-
-
-if(
-account===ADMIN_ACCOUNT &&
-password===ADMIN_PASSWORD
-){
-
-
-loginPage.style.display="none";
-
-adminPage.style.display="block";
-
-
-loadData();
-
-
-}
-else{
-
-
-loginError.innerText=
-"账号或密码错误";
-
-
-}
-
-
+    await loadData();
 };
 
-
-
-// ======================
-// 退出
-// ======================
-
-logoutButton.onclick=function(){
-
-location.reload();
-
+logoutButton.onclick = function() {
+    location.reload();
 };
 
+// 兼容数据库字段为对象或 JSON 字符串的情况
+function parseIfString(value) {
+    if (typeof value !== "string") return value ?? {};
 
-
-// ======================
-// 获取数据
-// ======================
-
-
-async function loadData() {
     try {
-        const PAGE_SIZE = 1;
-        let allData = [];
+        return JSON.parse(value);
+    } catch (error) {
+        console.warn("字段 JSON 解析失败：", error);
+        return {};
+    }
+}
+
+// 请求接口，并检查返回内容是否为有效 JSON
+async function requestJson(params) {
+    const url = new URL(API_URL);
+
+    Object.entries(params).forEach(([key, value]) => {
+        url.searchParams.set(key, String(value));
+    });
+
+    const response = await fetch(url.toString(), {
+        cache: "no-store"
+    });
+
+    const rawText = await response.text();
+
+    if (!response.ok) {
+        throw new Error(
+            "HTTP 请求失败：" + response.status +
+            "；" + rawText.slice(0, 200)
+        );
+    }
+
+    let result;
+
+    try {
+        result = JSON.parse(rawText);
+    } catch (error) {
+        console.error(
+            "接口返回 JSON 不完整，字符数：",
+            rawText.length,
+            "返回结尾：",
+            rawText.slice(-200)
+        );
+
+        throw new Error("接口返回的 JSON 不完整，请检查云函数日志");
+    }
+
+    return result;
+}
+
+// 整理列表摘要数据
+function normalizeSummary(item) {
+    return {
+        ...item,
+        personalInformation: parseIfString(item.personalInformation),
+        stage1ClickCount: Number(item.stage1ClickCount || 0),
+        stage2ClickCount: Number(item.stage2ClickCount || 0)
+    };
+}
+
+// 分页读取被试列表，不下载完整点击序列
+async function loadData() {
+    statusMessage.innerText = "正在读取被试列表……";
+    dataBody.innerHTML = "";
+
+    try {
+        const PAGE_SIZE = 10;
+        const allData = [];
         let offset = 0;
 
-        // 分页读取，直到没有更多数据
         while (true) {
-            const url = new URL(API_URL);
-            url.searchParams.set("offset", offset);
-            url.searchParams.set("limit", PAGE_SIZE);
+            const result = await requestJson({
+                mode: "list",
+                offset,
+                limit: PAGE_SIZE
+            });
 
-            const response = await fetch(url.toString());
-
-            if (!response.ok) {
-                throw new Error("HTTP 请求失败：" + response.status);
-            }
-
-            const rawText = await response.text();
-
-            let result;
-            try {
-                result = JSON.parse(rawText);
-            } catch (error) {
-                console.error(
-                    `第 ${Math.floor(offset / PAGE_SIZE) + 1} 页 JSON 解析失败`,
-                    error,
-                    "返回字符数：",
-                    rawText.length,
-                    "返回结尾：",
-                    rawText.slice(-300)
+            if (
+                !result ||
+                result.success !== true ||
+                !Array.isArray(result.data)
+            ) {
+                throw new Error(
+                    result?.message || "接口没有返回有效的被试列表"
                 );
-                throw new Error("第 " + (Math.floor(offset / PAGE_SIZE) + 1) + " 页数据不完整，请检查接口返回");
             }
 
-            if (!Array.isArray(result)) {
-                throw new Error(result?.message || "接口返回的数据不是数组");
-            }
+            allData.push(...result.data);
 
-            allData = allData.concat(result);
+            statusMessage.innerText =
+                "已读取 " + allData.length + " 名被试……";
 
-            console.log(
-                "已读取实验记录：",
-                allData.length,
-                "条"
-            );
-
-            // 不足一页，说明已经读取完毕
-            if (result.length < PAGE_SIZE) {
+            if (result.data.length < PAGE_SIZE) {
                 break;
             }
 
             offset += PAGE_SIZE;
         }
 
-        // 兼容 CloudBase 对象格式和原来的 JSON 字符串格式
-        const parseIfString = value => {
-            if (typeof value !== "string") {
-                return value ?? {};
-            }
+        experiments = allData.map(normalizeSummary);
+        displayedExperiments = [...experiments];
 
-            try {
-                return JSON.parse(value);
-            } catch (error) {
-                console.warn("字段 JSON 解析失败：", error);
-                return {};
-            }
-        };
+        render(displayedExperiments);
 
-        experiments = allData.map(item => ({
-            ...item,
-            personalInformation: parseIfString(item.personalInformation),
-            stage1: parseIfString(item.stage1),
-            stage2: parseIfString(item.stage2)
-        }));
+        statusMessage.innerText =
+            "读取完成，共 " + experiments.length + " 名被试";
 
-        console.log("全部实验数据读取完成，共", experiments.length, "条");
-
-        render();
+        console.log("被试列表读取完成，共", experiments.length, "条");
 
     } catch (error) {
         console.error("数据读取失败：", error);
+        statusMessage.innerText = "数据读取失败：" + error.message;
         alert("数据读取失败：" + error.message);
     }
 }
 
+// 根据被试 ID 获取完整数据
+async function fetchFullRecord(participantId) {
+    const result = await requestJson({
+        mode: "detail",
+        participantId
+    });
 
-
-
-function formatTime(time){
-
-    if(!time){
-        return "";
+    if (
+        !result ||
+        result.success !== true ||
+        !result.data
+    ) {
+        throw new Error(
+            result?.message ||
+            "没有找到该被试的完整记录：" + participantId
+        );
     }
 
-    return new Date(time).toLocaleString("zh-CN");
+    const item = result.data;
 
+    return {
+        ...item,
+        personalInformation: parseIfString(item.personalInformation),
+        stage1: parseIfString(item.stage1),
+        stage2: parseIfString(item.stage2)
+    };
 }
 
-    
-// ======================
-// 渲染列表
-// ======================
+function formatTime(time) {
+    if (!time) return "";
 
-function render(list=experiments){
+    const date = new Date(time);
 
+    if (Number.isNaN(date.getTime())) {
+        return String(time);
+    }
 
-dataBody.innerHTML="";
-
-
-list.forEach(item=>{
-
-
-const stage1 =
-item.stage1?.clicks?.length || 0;
-
-
-const stage2 =
-item.stage2?.clicks?.length || 0;
-
-
-
-const tr =
-document.createElement("tr");
-
-
-
-tr.innerHTML=`
-
-<td>
-${item.participantId}
-</td>
-
-
-<td>
-${item.personalInformation?.age || ""}
-</td>
-
-
-<td>
-${item.personalInformation?.gender || ""}
-</td>
-
-
-<td>
-${stage1}
-</td>
-
-
-<td>
-${stage2}
-</td>
-
-
-<td>
-${formatTime(item.createdAt)}
-</td>
-
-
-<td>
-
-<button class="view">
-查看
-</button>
-
-
-<button class="exportOne">
-导出
-</button>
-
-
-</td>
-
-`;
-
-
-
-
-tr.querySelector(".view")
-.onclick=()=>showDetail(item);
-
-
-
-tr.querySelector(".exportOne")
-.onclick=()=>exportSingle(item);
-
-
-
-dataBody.appendChild(tr);
-
-
-
-});
-
-
-
-// 总数量
-
-document.getElementById("totalCount")
-.innerText=list.length;
-
-
-
-// 今日新增
-
-const today =
-new Date()
-.toLocaleDateString();
-
-
-
-const todayCount =
-experiments.filter(item=>{
-
-
-return new Date(item.createdAt)
-.toLocaleDateString()
-===today;
-
-
-}).length;
-
-
-
-document.getElementById("todayCount")
-.innerText=todayCount;
-
-
+    return date.toLocaleString("zh-CN");
 }
 
+// 渲染被试列表
+function render(list = experiments) {
+    dataBody.innerHTML = "";
 
+    list.forEach(item => {
+        const tr = document.createElement("tr");
 
-// ======================
+        const stage1 = item.stage1ClickCount || 0;
+        const stage2 = item.stage2ClickCount || 0;
+
+        const values = [
+            item.participantId || "",
+            item.personalInformation?.age || "",
+            item.personalInformation?.gender || "",
+            stage1,
+            stage2,
+            formatTime(item.createdAt)
+        ];
+
+        values.forEach(value => {
+            const td = document.createElement("td");
+            td.textContent = String(value);
+            tr.appendChild(td);
+        });
+
+        const actionCell = document.createElement("td");
+
+        const viewButton = document.createElement("button");
+        viewButton.textContent = "查看";
+        viewButton.onclick = () => showDetail(item);
+
+        const exportButton = document.createElement("button");
+        exportButton.textContent = "导出";
+        exportButton.onclick = () => exportSingle(item);
+
+        actionCell.appendChild(viewButton);
+        actionCell.appendChild(exportButton);
+        tr.appendChild(actionCell);
+
+        dataBody.appendChild(tr);
+    });
+
+    document.getElementById("totalCount").innerText =
+        experiments.length;
+
+    const today = new Date().toLocaleDateString();
+
+    const todayCount = experiments.filter(item => {
+        if (!item.createdAt) return false;
+
+        return new Date(item.createdAt).toLocaleDateString() === today;
+    }).length;
+
+    document.getElementById("todayCount").innerText = todayCount;
+}
+
 // 搜索
-// ======================
+function searchExperiments() {
+    const keyword =
+        document.getElementById("searchInput").value.trim();
 
+    if (!keyword) {
+        displayedExperiments = [...experiments];
+    } else {
+        displayedExperiments = experiments.filter(item =>
+            String(item.participantId || "").includes(keyword)
+        );
+    }
 
-document.getElementById("searchButton")
-.onclick=function(){
-
-
-const keyword =
-document.getElementById("searchInput")
-.value.trim();
-
-
-
-if(!keyword){
-
-render();
-
-return;
-
+    render(displayedExperiments);
 }
 
+document.getElementById("searchButton").onclick =
+    searchExperiments;
 
-
-const result =
-experiments.filter(item=>
-
-item.participantId
-.includes(keyword)
-
+document.getElementById("searchInput").addEventListener(
+    "keydown",
+    event => {
+        if (event.key === "Enter") searchExperiments();
+    }
 );
 
-
-
-render(result);
-
-
-
+document.getElementById("resetSearchButton").onclick = function() {
+    document.getElementById("searchInput").value = "";
+    displayedExperiments = [...experiments];
+    render(displayedExperiments);
 };
 
+// 查看完整详情：点击时才请求该被试的点击数据
+async function showDetail(summaryItem) {
+    const modal = document.getElementById("detailModal");
+    const content = document.getElementById("detailContent");
 
+    modal.style.display = "block";
+    content.textContent = "正在读取该被试的完整点击数据，请稍候……";
 
-// ======================
-// 查看详情
-// ======================
+    try {
+        const item = await fetchFullRecord(summaryItem.participantId);
+        const info = item.personalInformation || {};
+        const clicks1 = item.stage1?.clicks || [];
+        const clicks2 = item.stage2?.clicks || [];
 
-function showDetail(item){
+        content.innerHTML = "";
 
+        const title = document.createElement("h2");
+        title.textContent = item.participantId || "";
+        content.appendChild(title);
 
-document.getElementById("detailModal")
-.style.display="block";
+        const infoTitle = document.createElement("h3");
+        infoTitle.textContent = "个人信息";
+        content.appendChild(infoTitle);
 
+        const grid = document.createElement("div");
+        grid.className = "grid";
 
+        const infoFields = [
+            ["年龄", info.age],
+            ["性别", info.gender],
+            ["教育", info.education],
+            ["职业", info.occupation],
+            ["疲劳", info.fatigue],
+            ["精神状态", info.mentalState],
+            ["压力", info.stress],
+            ["惯用手", info.handedness],
+            ["MBTI", info.mbti]
+        ];
 
-const info =
-item.personalInformation;
+        infoFields.forEach(([label, value]) => {
+            const div = document.createElement("div");
+            div.className = "item";
+            div.textContent = label + "：" + (value ?? "");
+            grid.appendChild(div);
+        });
 
+        content.appendChild(grid);
 
+        const stage1Title = document.createElement("h3");
+        stage1Title.textContent =
+            "阶段1点击序列（" + clicks1.length + " 次）";
+        content.appendChild(stage1Title);
 
-document.getElementById("detailContent")
-.innerHTML=`
+        const stage1Text = document.createElement("p");
+        stage1Text.textContent =
+            clicks1.map(x => x.target).join(" → ");
+        content.appendChild(stage1Text);
 
-<h2>
-${item.participantId}
-</h2>
+        const stage2Title = document.createElement("h3");
+        stage2Title.textContent =
+            "阶段2点击序列（" + clicks2.length + " 次）";
+        content.appendChild(stage2Title);
 
+        const stage2Text = document.createElement("p");
+        stage2Text.textContent =
+            clicks2.map(x => x.target).join(" → ");
+        content.appendChild(stage2Text);
 
-<h3>
-个人信息
-</h3>
-
-
-<div class="grid">
-
-
-<div class="item">
-年龄：
-${info.age}
-</div>
-
-
-<div class="item">
-性别：
-${info.gender}
-</div>
-
-
-<div class="item">
-教育：
-${info.education}
-</div>
-
-
-<div class="item">
-职业：
-${info.occupation}
-</div>
-
-
-<div class="item">
-疲劳：
-${info.fatigue}
-</div>
-
-
-<div class="item">
-精神状态：
-${info.mentalState}
-</div>
-
-
-<div class="item">
-压力：
-${info.stress}
-</div>
-
-
-<div class="item">
-惯用手：
-${info.handedness}
-</div>
-
-<div class="item">
-MBTI：
-${info.mbti || ""}
-</div>
-
-</div>
-
-
-
-<h3>
-阶段1点击序列
-</h3>
-
-
-<p>
-${
-item.stage1.clicks
-.map(x=>x.target)
-.join(" → ")
-}
-</p>
-
-
-
-<h3>
-阶段2点击序列
-</h3>
-
-
-<p>
-${
-item.stage2.clicks
-.map(x=>x.target)
-.join(" → ")
-}
-</p>
-
-
-`;
-
+    } catch (error) {
+        console.error("读取被试详情失败：", error);
+        content.textContent = "读取失败：" + error.message;
+    }
 }
 
-
-
-
-document.getElementById("closeButton")
-.onclick=function(){
-
-document.getElementById("detailModal")
-.style.display="none";
-
+document.getElementById("closeButton").onclick = function() {
+    document.getElementById("detailModal").style.display = "none";
 };
 
+// 导出全部 Excel：逐个读取完整记录，避免一次传输所有点击数据
+document.getElementById("exportButton").onclick = async function() {
+    const button = this;
 
+    if (typeof XLSX === "undefined") {
+        alert("Excel 组件加载失败，请检查网络后刷新页面。");
+        return;
+    }
 
+    if (experiments.length === 0) {
+        alert("当前没有可导出的被试数据。");
+        return;
+    }
 
+    button.disabled = true;
+    button.textContent = "正在读取并导出……";
 
-// ======================
-// 导出全部 Excel
-// ======================
+    try {
+        const fullData = [];
 
+        for (let i = 0; i < experiments.length; i++) {
+            const item = await fetchFullRecord(
+                experiments[i].participantId
+            );
 
-document.getElementById("exportButton")
-.onclick=function(){
+            fullData.push(item);
 
+            statusMessage.innerText =
+                "正在准备导出：" + (i + 1) +
+                "/" + experiments.length;
 
-exportExcel(experiments);
+            if ((i + 1) % 10 === 0 || i + 1 === experiments.length) {
+                console.log(
+                    "已准备导出 " + (i + 1) +
+                    "/" + experiments.length + " 名被试"
+                );
+            }
+        }
 
+        exportExcel(fullData);
 
+        statusMessage.innerText =
+            "导出完成，共 " + fullData.length + " 名被试";
+
+    } catch (error) {
+        console.error("导出全部数据失败：", error);
+
+        alert(
+            "导出全部数据失败：" + error.message +
+            "。请检查网络后重试；数据库原始数据不会受影响。"
+        );
+
+    } finally {
+        button.disabled = false;
+        button.textContent = "导出全部数据";
+    }
 };
 
-
-
-
-
-// ======================
-// 导出单个
-// ======================
-
-
-function exportSingle(item){
-
-
-exportExcel(
-[item],
-item.participantId
-);
-
-
+// 导出单个被试
+async function exportSingle(summaryItem) {
+    try {
+        const item = await fetchFullRecord(summaryItem.participantId);
+        exportExcel([item], item.participantId);
+    } catch (error) {
+        console.error("导出单个被试失败：", error);
+        alert("导出失败：" + error.message);
+    }
 }
 
+// 生成 Excel，保留原来的两个工作表
+function exportExcel(data, name = "实验数据") {
+    const infoData = [[
+        "Participant ID",
+        "年龄",
+        "性别",
+        "教育程度",
+        "职业",
+        "疲劳",
+        "精神状态",
+        "压力",
+        "惯用手",
+        "MBTI",
+        "实验开始时间",
+        "实验完成时间"
+    ]];
 
+    const clickData = [[
+        "Participant ID",
+        "阶段",
+        "序号",
+        "目标点",
+        "时间戳",
+        "阶段时间",
+        "间隔时间"
+    ]];
 
-// ======================
-// Excel生成
-// ======================
+    data.forEach(item => {
+        const info = item.personalInformation || {};
 
-function exportExcel(data,name="实验数据"){
+        infoData.push([
+            item.participantId || "",
+            info.age || "",
+            info.gender || "",
+            info.education || "",
+            info.occupation || "",
+            info.fatigue || "",
+            info.mentalState || "",
+            info.stress || "",
+            info.handedness || "",
+            info.mbti || "",
+            formatTime(item.stage1?.startedAt),
+            formatTime(item.createdAt)
+        ]);
 
+        [item.stage1, item.stage2].forEach((stage, index) => {
+            if (stage && Array.isArray(stage.clicks)) {
+                stage.clicks.forEach(click => {
+                    clickData.push([
+                        item.participantId || "",
+                        index + 1,
+                        click.sequence ?? "",
+                        click.target ?? "",
+                        click.timestamp ?? "",
+                        click.elapsed_s ?? "",
+                        click.interval_s ?? ""
+                    ]);
+                });
+            }
+        });
+    });
 
-let infoData = [
-[
-"Participant ID",
-"年龄",
-"性别",
-"教育程度",
-"职业",
-"疲劳",
-"精神状态",
-"压力",
-"惯用手",
-"MBTI",    
-"实验开始时间",
-"实验完成时间"
-]
-];
+    const wb = XLSX.utils.book_new();
 
+    const ws1 = XLSX.utils.aoa_to_sheet(infoData);
+    const ws2 = XLSX.utils.aoa_to_sheet(clickData);
 
-let clickData = [
-[
-"Participant ID",
-"阶段",
-"序号",
-"目标点",
-"时间戳",
-"阶段时间",
-"间隔时间"
-]
-];
+    XLSX.utils.book_append_sheet(wb, ws1, "Participant_Info");
+    XLSX.utils.book_append_sheet(wb, ws2, "Click_Data");
 
-
-
-data.forEach(item=>{
-
-
-const info=item.personalInformation;
-
-
-
-infoData.push([
-
-item.participantId,
-
-info.age || "",
-
-info.gender || "",
-
-info.education || "",
-
-info.occupation || "",
-
-info.fatigue || "",
-
-info.mentalState || "",
-
-info.stress || "",
-
-info.handedness || "",
-
-info.mbti || "",
-
-formatTime(item.stage1.startedAt),
-
-formatTime(item.createdAt)
-
-]);
-
-
-
-
-[item.stage1,item.stage2]
-.forEach((stage,index)=>{
-
-
-if(stage && stage.clicks){
-
-
-stage.clicks.forEach(click=>{
-
-
-clickData.push([
-
-item.participantId,
-
-index+1,
-
-click.sequence,
-
-click.target,
-
-click.timestamp,
-
-click.elapsed_s,
-
-click.interval_s || ""
-
-]);
-
-
-});
-
-
+    XLSX.writeFile(wb, name + ".xlsx");
 }
-
-
-
-});
-
-
-});
-
-
-
-
-
-const wb = XLSX.utils.book_new();
-
-
-
-const ws1 =
-XLSX.utils.aoa_to_sheet(infoData);
-
-
-const ws2 =
-XLSX.utils.aoa_to_sheet(clickData);
-
-
-
-XLSX.utils.book_append_sheet(
-wb,
-ws1,
-"Participant_Info"
-);
-
-
-XLSX.utils.book_append_sheet(
-wb,
-ws2,
-"Click_Data"
-);
-
-
-
-XLSX.writeFile(
-wb,
-name+".xlsx"
-);
-
-
-}
-    
 </script>
 
-
-
 </body>
-
 </html>
