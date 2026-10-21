@@ -535,70 +535,93 @@ location.reload();
 // 获取数据
 // ======================
 
-async function loadData(){
+
+async function loadData() {
     try {
-        const response = await fetch(API_URL);
+        const PAGE_SIZE = 100;
+        let allData = [];
+        let offset = 0;
 
-        if (!response.ok) {
-            throw new Error("HTTP 请求失败：" + response.status);
-        }
+        // 分页读取，直到没有更多数据
+        while (true) {
+            const url = new URL(API_URL);
+            url.searchParams.set("offset", offset);
+            url.searchParams.set("limit", PAGE_SIZE);
 
-        const rawText = await response.text();
+            const response = await fetch(url.toString());
 
-console.log("接口返回字符数：", rawText.length);
-console.log("接口返回开头：", rawText.slice(0, 200));
-console.log("接口返回结尾：", rawText.slice(-500));
-console.log("接口返回最后一个字符：", JSON.stringify(rawText.slice(-1)));
-console.log("接口返回最后100个字符：", JSON.stringify(rawText.slice(-100)));
-console.log("末尾是否包含完整数组结束符 ]：", rawText.trimEnd().endsWith("]"));
+            if (!response.ok) {
+                throw new Error("HTTP 请求失败：" + response.status);
+            }
 
-let result;
+            const rawText = await response.text();
 
-try {
-    result = JSON.parse(rawText);
-} catch (e) {
-    console.error("JSON 解析失败：", e);
+            let result;
+            try {
+                result = JSON.parse(rawText);
+            } catch (error) {
+                console.error(
+                    `第 ${Math.floor(offset / PAGE_SIZE) + 1} 页 JSON 解析失败`,
+                    error,
+                    "返回字符数：",
+                    rawText.length,
+                    "返回结尾：",
+                    rawText.slice(-300)
+                );
+                throw new Error("第 " + (Math.floor(offset / PAGE_SIZE) + 1) + " 页数据不完整，请检查接口返回");
+            }
 
-    const pos = e.message.match(/position (\d+)/);
-    if (pos) {
-        const errorPos = Number(pos[1]);
-        console.error(
-            "错误位置附近的数据：",
-            rawText.slice(errorPos - 200, errorPos + 300)
-        );
-    }
+            if (!Array.isArray(result)) {
+                throw new Error(result?.message || "接口返回的数据不是数组");
+            }
 
-    throw e;
-}
+            allData = allData.concat(result);
 
-        if (!Array.isArray(result)) {
-            throw new Error(result?.message || "接口返回的数据不是数组");
+            console.log(
+                "已读取实验记录：",
+                allData.length,
+                "条"
+            );
+
+            // 不足一页，说明已经读取完毕
+            if (result.length < PAGE_SIZE) {
+                break;
+            }
+
+            offset += PAGE_SIZE;
         }
 
         // 兼容 CloudBase 对象格式和原来的 JSON 字符串格式
         const parseIfString = value => {
-            if (typeof value !== "string") return value ?? {};
+            if (typeof value !== "string") {
+                return value ?? {};
+            }
+
             try {
                 return JSON.parse(value);
-            } catch (e) {
-                console.warn("字段 JSON 解析失败：", e);
+            } catch (error) {
+                console.warn("字段 JSON 解析失败：", error);
                 return {};
             }
         };
 
-        experiments = result.map(item => ({
+        experiments = allData.map(item => ({
             ...item,
             personalInformation: parseIfString(item.personalInformation),
             stage1: parseIfString(item.stage1),
             stage2: parseIfString(item.stage2)
         }));
 
+        console.log("全部实验数据读取完成，共", experiments.length, "条");
+
         render();
+
     } catch (error) {
         console.error("数据读取失败：", error);
-        alert("数据读取失败，请检查 CloudBase 接口地址、路由及云函数日志。");
+        alert("数据读取失败：" + error.message);
     }
 }
+
 
 
 
