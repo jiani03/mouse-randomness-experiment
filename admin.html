@@ -543,7 +543,30 @@ async function loadData(){
             throw new Error("HTTP 请求失败：" + response.status);
         }
 
-        const result = await response.json();
+        const rawText = await response.text();
+
+console.log("接口返回字符数：", rawText.length);
+console.log("接口返回开头：", rawText.slice(0, 200));
+console.log("接口返回结尾：", rawText.slice(-500));
+
+let result;
+
+try {
+    result = JSON.parse(rawText);
+} catch (e) {
+    console.error("JSON 解析失败：", e);
+
+    const pos = e.message.match(/position (\d+)/);
+    if (pos) {
+        const errorPos = Number(pos[1]);
+        console.error(
+            "错误位置附近的数据：",
+            rawText.slice(errorPos - 200, errorPos + 300)
+        );
+    }
+
+    throw e;
+}
 
         if (!Array.isArray(result)) {
             throw new Error(result?.message || "接口返回的数据不是数组");
