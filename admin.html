@@ -548,6 +548,9 @@ async function loadData(){
 console.log("接口返回字符数：", rawText.length);
 console.log("接口返回开头：", rawText.slice(0, 200));
 console.log("接口返回结尾：", rawText.slice(-500));
+console.log("接口返回最后一个字符：", JSON.stringify(rawText.slice(-1)));
+console.log("接口返回最后100个字符：", JSON.stringify(rawText.slice(-100)));
+console.log("末尾是否包含完整数组结束符 ]：", rawText.trimEnd().endsWith("]"));
 
 let result;
 
